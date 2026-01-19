@@ -66,6 +66,6 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         end
         Legend(f[4,0:2], axs[1], orientation=:horizontal)
         Label(f[begin-1, 0:2],"Obesity treatement with 2.4mg semaglutide", fontsize=20, font = :bold)
-        save("Trajectories_diabetic.png", figure)
+        save("Trajectories_obesity.png", figure)
         f
 end
