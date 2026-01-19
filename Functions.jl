@@ -362,7 +362,6 @@ function normalized_change(inputfile, odefile; callback_type = "none")
     return [body_weight, food_ingestion, blood_glucose, glp1, insulin, leptin, insulin_sen, leptin_sen, beta, glucotoxicity, lipotoxicity]
 end
 
-
 function compute_x(x, dodge; width=1, gap=0.2, dodge_gap=0.03)
     """
     Calculates x-positions of grouped bars in bar plot
