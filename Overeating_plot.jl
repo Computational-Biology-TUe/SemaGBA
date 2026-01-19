@@ -6,8 +6,8 @@ odefile = "ODE_simplified.jl"
 
 
 # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
-sol_untreated = run_simulation(inputfile, odefile, callback_type= "overeating"); 
-sol_treated = run_simulation(inputfile, odefile, callback_type= "overeating with semaglutide"); 
+sol_untreated = run_simulation(inputfile, odefile, callback_type= :overeating); 
+sol_treated = run_simulation(inputfile, odefile, callback_type= :overeating_with_semaglutide); 
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],

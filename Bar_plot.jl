@@ -7,8 +7,8 @@ inputfile_obesity = "Inputs_obesity.jl"
 odefile = "ODE_simplified.jl" 
 
 # Compute normalized changes for diabetic and obesity scenario
-vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = "semaglutide");
-vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = "semaglutide");
+vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
+vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = :semaglutide);
 
 # Barplot setup
 var_names = ["Body weight*", "Food ingestion*", "Blood glucose*", 

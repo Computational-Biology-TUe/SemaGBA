@@ -1,6 +1,6 @@
-using Interpolations
+using Interpolations, DifferentialEquations
 
-function run_simulation(inputfile, odefile; callback_type= "none")
+function run_simulation(inputfile, odefile; callback_type= :none)
     """ 
     Run an ODE simulation for a given input scenario
     
@@ -47,16 +47,16 @@ function run_simulation(inputfile, odefile; callback_type= "none")
     injections_doses = vcat([fill(dose, length(t)) for (dose,t) in zip(injection_doses, release_times)]...)
     
     # Determine callback
-    if callback_type == "none"
+    if callback_type == :none
         cb = CallbackSet()
 
-    elseif callback_type == "semaglutide"        
+    elseif callback_type == :semaglutide        
         cb = CallbackSet(semaglutide_callback(injections_time_points, injections_doses))
 
-    elseif callback_type == "overeating"
+    elseif callback_type == :overeating
         cb = CallbackSet(overeating_callback())
 
-    elseif callback_type == "overeating with semaglutide"
+    elseif callback_type == :overeating_with_semaglutide
         cb_sema = semaglutide_callback(injections_time_points, injections_doses)
         cb_food = overeating_callback()
         cb = CallbackSet(cb_food,cb_sema);

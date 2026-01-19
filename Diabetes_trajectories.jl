@@ -1,13 +1,15 @@
 using CairoMakie
 
+include("Functions.jl") 
+
 # Define input and ODE file
 inputfile = "Inputs_diabetes.jl"
 odefile_simplified = "ODE_simplified.jl" 
 odefile_neural = "ODE_neural.jl" 
 
 # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
-sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= "semaglutide"); 
-sol_neural = run_simulation(inputfile, odefile_neural, callback_type= "semaglutide"); 
+sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
+sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],
@@ -60,7 +62,7 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
             lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Original")
             lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="With neural\n activity", linestyle= :dash)
             push!(axs, ax)
-            Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=12pt)
+            Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
         end
         Legend(f[4,0:2], axs[1], orientation=:horizontal)
         Label(f[begin-1, 0:2],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)

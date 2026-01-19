@@ -7,8 +7,8 @@ inputfile_obesity = "Inputs_obesity.jl"
 odefile = "ODE_neural.jl" 
 
 # Run diabetes and obesity simulation
-sol_diabetes = run_simulation(inputfile_diabetes, odefile, callback_type= "semaglutide"); 
-sol_obesity = run_simulation(inputfile_obesity, odefile, callback_type= "semaglutide");
+sol_diabetes = run_simulation(inputfile_diabetes, odefile, callback_type= :semaglutide); 
+sol_obesity = run_simulation(inputfile_obesity, odefile, callback_type= :semaglutide);
 
 # Extract variables
 extract_neurons(sol) = (
