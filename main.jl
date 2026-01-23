@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-using Pkg
+using Pkg, CairoMakie
 include("src/Functions.jl") 
 
 Pkg.activate(".")
@@ -32,10 +32,6 @@ function main(simulations)
 
     if 2 in simulations
         # run simulation 2
-
-        using CairoMakie
-        include("../src/Functions.jl") 
-
         # Define input and ODE file
         inputfile_diabetes = "../input/Inputs_diabetes.jl"
         inputfile_obesity = "../input/Inputs_obesity.jl" 
@@ -111,8 +107,6 @@ function main(simulations)
 
     if 3 in simulations
         # run simulation 3
-        using CairoMakie
-
         # Define input and ODE file
         inputfile = "input/Inputs_healthy.jl"
         odefile = "src/ODE_simplified.jl" 
@@ -121,7 +115,7 @@ function main(simulations)
         sol_untreated = run_simulation(inputfile, odefile, callback_type= :overeating); 
         sol_treated = run_simulation(inputfile, odefile, callback_type= :overeating_with_semaglutide); 
 
-        extract_values(sol) = (
+        extract_values3(sol) = (
             body_weight      = [round(u[1], digits=2) for u in sol.u],
             food_ingestion   = [round(u[2], digits=2) for u in sol.u],
             blood_glucose    = [round(u[3], digits=2) for u in sol.u],
@@ -136,8 +130,8 @@ function main(simulations)
             semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
             beta             = [round(u[13], digits=3) for u in sol.u])
 
-        variables_untreated = extract_values(sol_untreated)
-        variables_treated = extract_values(sol_treated)
+        variables_untreated = extract_values3(sol_untreated)
+        variables_treated = extract_values3(sol_treated)
 
         cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
@@ -188,7 +182,6 @@ function main(simulations)
 
     if 4 in simulations
         # run simulation 4
-        using CairoMakie
         # Define input and ODE file
         inputfile_diabetes = "input/Inputs_diabetes.jl"
         inputfile_obesity = "input/Inputs_obesity.jl" 
@@ -244,9 +237,6 @@ function main(simulations)
 
     if 5 in simulations
         # run simulation 5
-
-        using CairoMakie
-
         # Define input and ODE file
         inputfile = "input/Inputs_diabetes.jl"
         odefile_simplified = "src/ODE_simplified.jl" 
@@ -256,7 +246,7 @@ function main(simulations)
         sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
         sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
 
-        extract_values(sol) = (
+        extract_values5(sol) = (
             body_weight      = [round(u[1], digits=2) for u in sol.u],
             food_ingestion   = [round(u[2], digits=2) for u in sol.u],
             blood_glucose    = [round(u[3], digits=2) for u in sol.u],
@@ -271,8 +261,8 @@ function main(simulations)
             semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
             beta             = [round(u[13], digits=3) for u in sol.u])
 
-        variables_simplified = extract_values(sol_simplified)
-        variables_neural = extract_values(sol_neural)
+        variables_simplified = extract_values5(sol_simplified)
+        variables_neural = extract_values5(sol_neural)
 
         cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
@@ -324,19 +314,17 @@ function main(simulations)
 
     if 6 in simulations
         # run simulation 6
-    
-        using CairoMakie
-
         # Define input and ODE file
-        inputfile = "input/Inputs_obesity.jl"
-        odefile_simplified = "src/ODE_simplified.jl" 
-        odefile_neural = "src/ODE_neural.jl" 
+
+        inputfile = joinpath(@__DIR__, "input", "Inputs_obesity.jl")
+        odefile_simplified = joinpath(@__DIR__, "src", "ODE_simplified.jl")
+        odefile_neural = joinpath(@__DIR__, "src", "ODE_neural.jl")
 
         # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
         sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
         sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
 
-        extract_values(sol) = (
+        extract_values6(sol) = (
             body_weight      = [round(u[1], digits=2) for u in sol.u],
             food_ingestion   = [round(u[2], digits=2) for u in sol.u],
             blood_glucose    = [round(u[3], digits=2) for u in sol.u],
@@ -351,8 +339,8 @@ function main(simulations)
             semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
             beta             = [round(u[13], digits=3) for u in sol.u])
 
-        variables_simplified = extract_values(sol_simplified)
-        variables_neural = extract_values(sol_neural)
+        variables_simplified = extract_values6(sol_simplified)
+        variables_neural = extract_values6(sol_neural)
 
         cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
@@ -395,15 +383,16 @@ function main(simulations)
                 # save figure
                 figdir = joinpath(@__DIR__, "..", "figures")
                 mkpath(figdir)
-                save(joinpath(figdir, "fig6_Trajectories_obesity.png"), f)
+                save(joinpath(figdir, "fig66_Trajectories_obesity.png"), f)
 
                 f
         end
 
     end
+    
 
 end
 
 
-main(ARGS)
+main(["6"])
 
