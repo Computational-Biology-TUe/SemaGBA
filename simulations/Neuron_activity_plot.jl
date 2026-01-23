@@ -1,10 +1,10 @@
 using CairoMakie
-include("src/Functions.jl") 
+include("../src/Functions.jl") 
 
 # Define input and ODE file
-inputfile_diabetes = "input/Inputs_diabetes.jl"
-inputfile_obesity = "input/Inputs_obesity.jl" 
-odefile = "src/ODE_neural.jl" 
+inputfile_diabetes = "../input/Inputs_diabetes.jl"
+inputfile_obesity = "../input/Inputs_obesity.jl" 
+odefile = "../src/ODE_neural.jl" 
 
 # Run diabetes and obesity simulation
 sol_diabetes = run_simulation(inputfile_diabetes, odefile, callback_type= :semaglutide); 
@@ -43,7 +43,12 @@ figure = let f = Figure(size=(17cm,14cm), fontsize=12)
     end
 
     Legend(f[1, 2], ax1, orientation=:vertical)
-    save("figures/fig4b_Neuron_activity.png", f)
+
+    # save figure
+    figdir = joinpath(@__DIR__, "..", "figures")
+    mkpath(figdir)
+    save(joinpath(figdir, "fig4b_Neuron_activity.png"), f)
+    
     f
         
 end

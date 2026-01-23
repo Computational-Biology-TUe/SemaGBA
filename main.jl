@@ -18,6 +18,8 @@
 """
 
 using Pkg
+include("src/Functions.jl") 
+
 Pkg.activate(".")
 Pkg.instantiate()
 
@@ -32,8 +34,6 @@ function main(simulations)
         # run simulation 2
 
         using CairoMakie
-        include("src/Functions.jl") 
-
         # Define input and ODE file
         inputfile_diabetes = "input/Inputs_diabetes.jl"
         inputfile_obesity = "input/Inputs_obesity.jl" 
@@ -179,8 +179,6 @@ function main(simulations)
     if 4 in simulations
         # run simulation 4
         using CairoMakie
-        include("src/Functions.jl") 
-
         # Define input and ODE file
         inputfile_diabetes = "input/Inputs_diabetes.jl"
         inputfile_obesity = "input/Inputs_obesity.jl" 
@@ -234,8 +232,6 @@ function main(simulations)
         # run simulation 5
 
         using CairoMakie
-
-        include("src/Functions.jl") 
 
         # Define input and ODE file
         inputfile = "input/Inputs_diabetes.jl"
@@ -311,7 +307,6 @@ function main(simulations)
         # run simulation 6
     
         using CairoMakie
-        include("src/Functions.jl") 
 
         # Define input and ODE file
         inputfile = "input/Inputs_obesity.jl"
@@ -386,5 +381,5 @@ function main(simulations)
 end
 
 
-main()
+main(ARGS)
 
