@@ -1,5 +1,27 @@
 # SemaGBA
- A system dynamics model of the Semaglutide-responsive Gut-Brain Axis (SemaGBA). A model of how the brain and semaglutide regulate appetite and weight.
+A system dynamics model of the Semaglutide-responsive Gut-Brain Axis (SemaGBA). A model of how the brain and semaglutide regulate appetite and weight.
+
+# Reproducing the Results
+Run the following command from the `SemaGBA` folder to run all experiments.
+
+```bash
+julia main.jl
+```
+
+This will run all the simulations and produce the figures from the paper and put them in the `figures` folder.
+
+If you want to run specific experiments, use the following syntax:
+
+```bash
+julia main.jl 1 2
+```
+
+to run the experiments producing figures 1 and 2. 
+
+| Experiment number | Description |
+| --- | --- |
+| 1 | beschrijving |
+
 
 # Structure of this repository
 ## Input fils

@@ -63,7 +63,7 @@ let
     Legend(fig[1,2], bars, ["Diabetes", "Obesity"]) 
 
     Label(fig[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
-    save("barplot.png", fig)
+    save("figures/fig_1.png", fig)
 
 	fig
 end
