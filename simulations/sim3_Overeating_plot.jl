@@ -67,7 +67,8 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
     # save figure
     figdir = joinpath(@__DIR__, "..", "figures")
     mkpath(figdir)
-    save(joinpath(figdir, "fig_3_Overeating.png"), f)   
+    save(joinpath(figdir, "fig3_Overeating.png"), f)   
+    
     f
 end
 

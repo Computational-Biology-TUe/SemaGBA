@@ -34,10 +34,12 @@ function main(simulations)
         # run simulation 2
 
         using CairoMakie
+        include("../src/Functions.jl") 
+
         # Define input and ODE file
-        inputfile_diabetes = "input/Inputs_diabetes.jl"
-        inputfile_obesity = "input/Inputs_obesity.jl" 
-        odefile = "src/ODE_simplified.jl" 
+        inputfile_diabetes = "../input/Inputs_diabetes.jl"
+        inputfile_obesity = "../input/Inputs_obesity.jl" 
+        odefile = "../src/ODE_simplified.jl" 
 
         # Compute normalized changes for diabetic and obesity scenario
         vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
@@ -66,8 +68,8 @@ function main(simulations)
         elements = [PolyElement(pattern=p) for p in patterns];
 
         # Create figure
-        let 
-            fig = Figure(size=(17cm,12cm))
+
+        figure = let f = Figure(size=(17cm,12cm))
 
             a = Axis(fig[1,1], 
                 xticks=(1:n, var_names),        
@@ -96,9 +98,13 @@ function main(simulations)
             Legend(fig[1,2], bars, ["Diabetes", "Obesity"]) 
 
             Label(fig[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
-            save("figures/fig2_Barplot.png", fig)
+            
+            # save figure
+            figdir = joinpath(@__DIR__, "..", "figures")
+            mkpath(figdir)
+            save(joinpath(figdir, "fig2_Barplot.png"), f)
 
-            fig
+            f
         end
 
     end
@@ -170,7 +176,11 @@ function main(simulations)
             end
             Label(f[begin-1, 0:2],"Overeating simulation", fontsize=18, font = :bold)
             Legend(f[4,0:2], axs[1], orientation=:horizontal)
-            save("figures/fig_3_Overeating.png", f)
+            
+            # save figure
+            figdir = joinpath(@__DIR__, "..", "figures")
+            mkpath(figdir)
+            save(joinpath(figdir, "fig3_Overeating.png"), f)   
             f
         end
 
@@ -221,9 +231,13 @@ function main(simulations)
             end
 
             Legend(f[1, 2], ax1, orientation=:vertical)
-            save("figures/fig4b_Neuron_activity.png", f)
-            f
-                
+            
+            # save figure
+            figdir = joinpath(@__DIR__, "..", "figures")
+            mkpath(figdir)
+            save(joinpath(figdir, "fig4b_Neuron_activity.png"), f)
+    
+            f     
         end
 
     end
@@ -297,7 +311,12 @@ function main(simulations)
                 end
                 Legend(f[4,0:2], axs[1], orientation=:horizontal)
                 Label(f[begin-1, 0:2],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)
-                save("figures/fig5_Trajectories_diabetic.png", figure)
+                
+                # save figure
+                figdir = joinpath(@__DIR__, "..", "figures")
+                mkpath(figdir)
+                save(joinpath(figdir, "fig5_Trajectories_diabetic.png"), f)
+
                 f
         end
 
@@ -372,7 +391,12 @@ function main(simulations)
                 end
                 Legend(f[4,0:2], axs[1], orientation=:horizontal)
                 Label(f[begin-1, 0:2],"Obesity treatement with 2.4mg semaglutide", fontsize=20, font = :bold)
-                save("figures/fig_6_Trajectories_obesity.png", figure)
+                
+                # save figure
+                figdir = joinpath(@__DIR__, "..", "figures")
+                mkpath(figdir)
+                save(joinpath(figdir, "fig6_Trajectories_obesity.png"), f)
+
                 f
         end
 
