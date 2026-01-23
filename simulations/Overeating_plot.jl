@@ -1,9 +1,8 @@
 using CairoMakie
 
 # Define input and ODE file
-inputfile = "Inputs_healthy.jl"
-odefile = "ODE_simplified.jl" 
-
+inputfile = "input/Inputs_healthy.jl"
+odefile = "src/ODE_simplified.jl" 
 
 # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
 sol_untreated = run_simulation(inputfile, odefile, callback_type= :overeating); 
@@ -64,7 +63,7 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
     end
     Label(f[begin-1, 0:2],"Overeating simulation", fontsize=18, font = :bold)
     Legend(f[4,0:2], axs[1], orientation=:horizontal)
-    save("overeating.png", f)
+    save("figures/fig_3_Overeating.png", f)
     f
 end
 

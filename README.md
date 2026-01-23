@@ -2,7 +2,7 @@
 A system dynamics model of the Semaglutide-responsive Gut-Brain Axis (SemaGBA). A model of how the brain and semaglutide regulate appetite and weight.
 
 # Reproducing the Results
-Run the following command from the `SemaGBA` folder to run all experiments.
+Run the following command from the `SemaGBA` folder to run all simulations.
 
 ```bash
 julia main.jl
@@ -10,17 +10,22 @@ julia main.jl
 
 This will run all the simulations and produce the figures from the paper and put them in the `figures` folder.
 
-If you want to run specific experiments, use the following syntax:
+If you want to run specific simulations, use the following syntax:
 
 ```bash
-julia main.jl 1 2
+julia main.jl 2 3
 ```
 
-to run the experiments producing figures 1 and 2. 
+to run the simulations producing figures 1 and 2. 
 
-| Experiment number | Description |
+| Simulation number | Description |
 | --- | --- |
-| 1 | beschrijving |
+| 2 | Figure 2; Bar plot of the normalized change from baseline for metabolic variables following semaglutide treatment in type 2 diabetes (0.5 mg for 30 weeks) and obesity (2.4 mg for 68 weeks). |
+| 3 | Figure 3; Simulation of the progression from a healthy state to obesity with type 2 diabetes under chronic overeating (3000 instead of 2000 kcal/day) during 3 years. Comparison between untreated progression and treatment with 1.0 mg semaglutide treatment initiated at day 210. |
+| 4 | Figure 4b; AgRP, POMC, and dopamine neuron activity in two model scenarios; diabetes (0.5 mg semaglutide for 30 weeks) and obesity (2.4 mg semaglutide for 68 weeks).|
+| 5 | Figure 5; Metabolic trajectories of a diabetic patient treated with 0.5 mg semaglutide during 30 weeks, including the non-neural and neural simulation. |
+| 6 | Figure 6; Metabolic trajectories of an obese patient treated with 2.4 mg semaglutide during 68 weeks, including the non-neural and neural simulation.|
+
 
 
 # Structure of this repository

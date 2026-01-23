@@ -1,10 +1,10 @@
 using CairoMakie
-include("Functions.jl") 
+include("src/Functions.jl") 
 
 # Define input and ODE file
-inputfile_diabetes = "Inputs_diabetes.jl"
-inputfile_obesity = "Inputs_obesity.jl" 
-odefile = "ODE_simplified.jl" 
+inputfile_diabetes = "input/Inputs_diabetes.jl"
+inputfile_obesity = "input/Inputs_obesity.jl" 
+odefile = "src/ODE_simplified.jl" 
 
 # Compute normalized changes for diabetic and obesity scenario
 vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
@@ -63,7 +63,7 @@ let
     Legend(fig[1,2], bars, ["Diabetes", "Obesity"]) 
 
     Label(fig[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
-    save("figures/fig_1.png", fig)
+    save("figures/fig2_Barplot.png", fig)
 
 	fig
 end

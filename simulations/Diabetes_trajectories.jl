@@ -1,11 +1,11 @@
 using CairoMakie
 
-include("Functions.jl") 
+include("src/Functions.jl") 
 
 # Define input and ODE file
-inputfile = "Inputs_diabetes.jl"
-odefile_simplified = "ODE_simplified.jl" 
-odefile_neural = "ODE_neural.jl" 
+inputfile = "input/Inputs_diabetes.jl"
+odefile_simplified = "src/ODE_simplified.jl" 
+odefile_neural = "src/ODE_neural.jl" 
 
 # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
 sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
@@ -66,6 +66,6 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         end
         Legend(f[4,0:2], axs[1], orientation=:horizontal)
         Label(f[begin-1, 0:2],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)
-        save("Trajectories_diabetic.png", figure)
+        save("figures/fig5_Trajectories_diabetic.png", figure)
         f
 end
