@@ -16,7 +16,7 @@ If you want to run specific simulations, use the following syntax:
 julia main.jl 2 3
 ```
 
-to run the simulations producing figures 1 and 2. 
+to run the simulations producing figures 2 and 3. 
 
 | Simulation number | Description |
 | --- | --- |
