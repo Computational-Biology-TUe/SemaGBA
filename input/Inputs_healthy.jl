@@ -1,7 +1,7 @@
 """ This file contains all inputs to simulate a healthy individual"""
 
 # Define the duration of the simulation
-t_days =365*3; #days
+t_days =365*5; #days
 
 # Define the pharmacokinetic parameters for the semaglutide injections
 bioavailability = 0.89; #dimentionless
@@ -25,9 +25,9 @@ injection_doses = [injection_0_25_mg,
 
 # Define the semaglutide injection times for each dose (days) (uncomment the right one)
 # Each inner array lists the days on which the corresponsing dose is injected
-release_times = [[7.0*i for i in 30:34],
-                [7.0*i for i in 35:38],
-                [7.0*i for i in 39:400]]
+release_times = [[7.0*i for i in 35:38],
+                [7.0*i for i in 39:42],
+                [7.0*i for i in 43:400]]
 
 # Wegovy with 2.4 mg semaglutide maintenance dose
 #injection_doses = [injection_0_25_mg, 
@@ -71,7 +71,7 @@ ref_semaglutide_subcutaneous = initial_semaglutide_subcutaneous= 0.0; #mg/dl
 ref_semaglutide_plasma = initial_semaglutide_plasma = 0.0; #mg/dl
 
 # Parameters for insulin
-ref_insulin = initial_insulin   = 7.07e-6; #mg/dL 
+ref_insulin = initial_insulin   = 8.0; #μU/mL 
 insulin_adj_time                = 10.0; #days
 
 # Parameters for insulin sensivitiy 

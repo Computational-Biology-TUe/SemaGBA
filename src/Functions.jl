@@ -66,7 +66,7 @@ function run_simulation(inputfile, odefile; callback_type= :none)
 
     # Run simulation
     prob = ODEProblem(ODEs!, u0, tspan, p)
-    sol = solve(prob, RadauIIA5(); tstops=injections_time_points, saveat=0.1, callback=cb)
+    sol = solve(prob, Tsit5(); tstops=injections_time_points, saveat=0.1, callback=cb)
 
     return sol
 end
@@ -94,10 +94,10 @@ Callback functions to keep food ingestion constant during the simulation
 """
 function overeating_callback()
     # Apply the callback during the period that food ingestion should remain constant
-    condition = (u,t,integrator) -> t < 365*5
+    condition = (u,t,integrator) -> t < 365*6
     function keep_overeating!(integrator)
         # Set food intake to a constant value
-        integrator.u[2] = 3000
+        integrator.u[2] = 2700
     end
     return DiscreteCallback(condition, keep_overeating!)
 end

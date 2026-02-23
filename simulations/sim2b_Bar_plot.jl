@@ -17,7 +17,7 @@ var_names = ["Body weight*", "Food ingestion*", "Blood glucose*",
             "Glucotoxicity", "Lipotoxicity"];
 
 n = length(var_names); # number of variables 
-k=2;                 # number of groups
+k = 2;                 # number of groups
 cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
 ys_flat = vcat(vars_diabetic,vars_obesity);  # flatten values for plotting
@@ -33,10 +33,9 @@ end
 elements = [PolyElement(pattern=p) for p in patterns];
 
 # Create figure
-
 figure = let f = Figure(size=(17cm,12cm))
 
-	a = Axis(fig[1,1], 
+	a = Axis(f[1,1], 
          xticks=(1:n, var_names),        
          xticklabelrotation=pi/6,        
          ylabel="Normalized change from baseline [-]", 
@@ -60,14 +59,13 @@ figure = let f = Figure(size=(17cm,12cm))
         push!(bars, barplot!(a, xs_g, ys_g; color=pat, dodge_gap=dodge_gap, gap=gap, width=widthplot))
     end
 
-    Legend(fig[1,2], bars, ["Diabetes", "Obesity"]) 
-
-    Label(fig[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
+    Legend(f[1,2], bars, ["Diabetes", "Obesity"]) 
+    Label(f[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
     
     # save figure
     figdir = joinpath(@__DIR__, "..", "figures")
     mkpath(figdir)
-    save(joinpath(figdir, "fig2_Barplot.png"), f)
+    save(joinpath(figdir, "fig2b_Barplot.png"), f)
 
 	f
 end

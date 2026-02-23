@@ -42,13 +42,13 @@ y_data_treated = [variables_treated.body_weight, variables_treated.food_ingestio
         variables_treated.beta]
 
 labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
-            "Blood glucose\n[mg/dL]", "Insulin\n[mg/dL]", "Insulin sensitivity\n[-]", 
-            "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[mg/dL]", 
+            "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
+            "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
             "β-cell functioning\n[mg/dL]"]
 
 # Create figure
-figure = let f = Figure(size=(15cm,17cm), fontsize=12)
+figure = let f = Figure(size=(15cm,17cm), fontsize=10)
     axs = Axis[]
 
     tr_text = split("ABCDEFGHIJKL", "")
@@ -58,6 +58,16 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         ax = Axis(f[x,y], xlabel="time [days]", ylabel=labels[i])
         lines!(ax, sol_untreated.t, y_data[i], color=Makie.wong_colors()[2], label="Untreated")
         lines!(ax, sol_treated.t, y_data_treated[i], color=Makie.wong_colors()[1], label="Treated with 1.0mg semaglutide")
+        
+        # add horizontal line for obesity and diabetes threshold
+        if i == 1  
+            threshold_weight = 30 * 1.83^2  
+            hlines!(ax, threshold_weight, linestyle=:dash, linewidth=2, color=Makie.wong_colors()[4])
+        elseif i == 3  
+            hlines!(ax, [125.0], linestyle=:dash, linewidth=2, color=Makie.wong_colors()[4])
+        end
+
+        vlines!(ax, 245.0, linestyle=:dash, linewidth=2, color=Makie.wong_colors()[3])
         push!(axs, ax)
         Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
     end
@@ -70,5 +80,52 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
     save(joinpath(figdir, "fig3_Overeating.png"), f)   
     
     f
+end
+
+idx_glucose = findfirst(>(125), variables_untreated.blood_glucose)
+
+if idx_glucose !== nothing
+    t_glucose = sol_untreated.t[idx_glucose]
+    println("Blood glucose exceeds 125 mg/dL at day ", t_glucose)
+    println(t_glucose/30, " Months")
+
+else
+    println("Blood glucose never exceeds 125 mg/dL")
+end
+
+idx_glucose2 = findfirst(>(110), variables_untreated.blood_glucose)
+
+if idx_glucose2 !== nothing
+    t_glucose = sol_untreated.t[idx_glucose2]
+    println("Blood glucose exceeds 110 mg/dL at day ", t_glucose)
+    println(t_glucose/30, " Months")
+
+else
+    println("Blood glucose never exceeds 110 mg/dL")
+end
+
+idx_glucose3 = findfirst(>(105), variables_untreated.blood_glucose)
+
+if idx_glucose3 !== nothing
+    t_glucose = sol_untreated.t[idx_glucose3]
+    println("Blood glucose exceeds 105 mg/dL at day ", t_glucose)
+    println(t_glucose/30, " Months")
+
+else
+    println("Blood glucose never exceeds 105 mg/dL")
+end
+
+
+threshold_weight = 30 * 1.83^2  
+
+idx_weight = findfirst(>(threshold_weight), variables_untreated.body_weight)
+
+if idx_weight !== nothing
+    t_weight = sol_untreated.t[idx_weight]
+    println("BMI exceeds 30 at day ", t_weight)
+    println(t_weight/30, " Months")
+
+else
+    println("BMI never exceeds 30")
 end
 

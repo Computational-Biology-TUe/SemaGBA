@@ -60,7 +60,7 @@ ref_semaglutide_subcutaneous = initial_semaglutide_subcutaneous= 0.0; #mg/dl
 ref_semaglutide_plasma = initial_semaglutide_plasma = 0.0; #mg/dl
 
 # Parameters for insulin
-ref_insulin = initial_insulin   = 7.07e-6 *1.5; #mg/dL  
+ref_insulin = initial_insulin   = 8.0 *1.5; #μU/mL  
 insulin_adj_time                = 20.0; #days
 
 # Parameters for insulin sensivitiy 

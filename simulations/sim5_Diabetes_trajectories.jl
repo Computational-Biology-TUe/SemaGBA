@@ -45,8 +45,8 @@ y_data_neural = [variables_neural.body_weight, variables_neural.food_ingestion,
         variables_neural.beta]
 
 labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
-            "Blood glucose\n[mg/dL]", "Insulin\n[mg/dL]", "Insulin sensitivity\n[-]", 
-            "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[mg/dL]", 
+            "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
+            "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
             "β-cell functioning\n[mg/dL]"]
 
@@ -59,8 +59,8 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
             x = (i-1) ÷ 3 
             y = (i-1) % 3
             ax = Axis(f[x,y], xlabel="Time [days]", ylabel=labels[i])
-            lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Original")
-            lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="With neural\n activity", linestyle= :dash)
+            lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Reduced model")
+            lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="Extended model", linestyle= :dash)
             push!(axs, ax)
             Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
         end
@@ -70,7 +70,7 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         # save figure
         figdir = joinpath(@__DIR__, "..", "figures")
         mkpath(figdir)
-        save(joinpath(figdir, "fig5_Trajectories_diabetic.png"), f)
+        save(joinpath(figdir, "fig5_Trajectories_diabetes.png"), f)
 
         f
 end
