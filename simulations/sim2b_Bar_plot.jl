@@ -11,7 +11,7 @@ vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :
 vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = :semaglutide);
 
 # Barplot setup
-var_names = ["Body weight*", "Food ingestion*", "Blood glucose*", 
+var_names = ["Body weight*", "Energy intake*", "Blood glucose*", 
             "GLP-1*", "Insulin*", "Leptin*", 
             "Insulin sensitivity", "Leptin sensitivity", "β-cell function", 
             "Glucotoxicity", "Lipotoxicity"];

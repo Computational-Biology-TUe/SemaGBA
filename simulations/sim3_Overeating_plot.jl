@@ -10,7 +10,7 @@ sol_treated = run_simulation(inputfile, odefile, callback_type= :overeating_with
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],
-    food_ingestion   = [round(u[2], digits=2) for u in sol.u],
+    net_energy_intake   = [round(u[2], digits=2) for u in sol.u],
     blood_glucose    = [round(u[3], digits=2) for u in sol.u],
     glp1             = [round(u[4], digits=9) for u in sol.u],
     insulin          = [round(u[5], digits=7) for u in sol.u],
@@ -29,19 +29,19 @@ variables_treated = extract_values(sol_treated)
 cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
 # Define data, labels, and linestyles for the plot
-y_data = [variables_untreated.body_weight, variables_untreated.food_ingestion, 
+y_data = [variables_untreated.body_weight, variables_untreated.net_energy_intake, 
         variables_untreated.blood_glucose, variables_untreated.insulin, variables_untreated.insulin_sen, 
         variables_untreated.glucotoxicity, variables_untreated.leptin, variables_untreated.leptin_sen, 
         variables_untreated.lipotoxicity, variables_untreated.glp1, variables_untreated.semaglu_sub, 
         variables_untreated.beta]
 
-y_data_treated = [variables_treated.body_weight, variables_treated.food_ingestion, 
+y_data_treated = [variables_treated.body_weight, variables_treated.net_energy_intake, 
         variables_treated.blood_glucose, variables_treated.insulin, variables_treated.insulin_sen, 
         variables_treated.glucotoxicity, variables_treated.leptin, variables_treated.leptin_sen, 
         variables_treated.lipotoxicity, variables_treated.glp1, variables_treated.semaglu_sub, 
         variables_treated.beta]
 
-labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
+labels = ["Body weight\n[kg]", "Energy intake\n[kcal]", 
             "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
             "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
@@ -80,52 +80,5 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=10)
     save(joinpath(figdir, "fig3_Overeating.png"), f)   
     
     f
-end
-
-idx_glucose = findfirst(>(125), variables_untreated.blood_glucose)
-
-if idx_glucose !== nothing
-    t_glucose = sol_untreated.t[idx_glucose]
-    println("Blood glucose exceeds 125 mg/dL at day ", t_glucose)
-    println(t_glucose/30, " Months")
-
-else
-    println("Blood glucose never exceeds 125 mg/dL")
-end
-
-idx_glucose2 = findfirst(>(110), variables_untreated.blood_glucose)
-
-if idx_glucose2 !== nothing
-    t_glucose = sol_untreated.t[idx_glucose2]
-    println("Blood glucose exceeds 110 mg/dL at day ", t_glucose)
-    println(t_glucose/30, " Months")
-
-else
-    println("Blood glucose never exceeds 110 mg/dL")
-end
-
-idx_glucose3 = findfirst(>(105), variables_untreated.blood_glucose)
-
-if idx_glucose3 !== nothing
-    t_glucose = sol_untreated.t[idx_glucose3]
-    println("Blood glucose exceeds 105 mg/dL at day ", t_glucose)
-    println(t_glucose/30, " Months")
-
-else
-    println("Blood glucose never exceeds 105 mg/dL")
-end
-
-
-threshold_weight = 30 * 1.83^2  
-
-idx_weight = findfirst(>(threshold_weight), variables_untreated.body_weight)
-
-if idx_weight !== nothing
-    t_weight = sol_untreated.t[idx_weight]
-    println("BMI exceeds 30 at day ", t_weight)
-    println(t_weight/30, " Months")
-
-else
-    println("BMI never exceeds 30")
 end
 

@@ -48,15 +48,20 @@ release_times = [[7.0*i for i in 35:38],
 
 
 """ Define reference values, inital values and adjustment times for all variables.
-To simulate steady-state, the initial and reference values are set equal"""
+To simulate steady-state, the initial and reference values are set equal.
+All values are daily averages."""
 
 # Parameters for body weight
 ref_body_weight = initial_body_weight = 80.0; #kg
 body_weight_adj_time            = 300.0; #days 
 
-# Parameters for food_ingestion
-ref_food_ingestion = initial_food_ingestion = 2000.0; #kcal
-food_ingestion_adj_time         = 100.0; #days
+# Parameters for energy intake
+#ref_food_ingestion = initial_food_ingestion = 2000.0; #kcal 
+ref_net_energy_intake           = 2000.0; #kcal
+food_ingestion                  = 2500.0; #kcal
+energy_expenditure              = 500.0; #kcal
+initial_net_energy_intake = food_ingestion - energy_expenditure
+net_energy_intake_adj_time         = 100.0; #days
 
 # Parameters for blood glucose
 ref_blood_glucose = initial_blood_glucose  = 90.0; #mg/dL

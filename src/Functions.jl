@@ -28,13 +28,13 @@ function run_simulation(inputfile, odefile; callback_type= :none)
     
     # Define ODE
     tspan = (0.0, t_days)
-    u0 = [initial_body_weight, initial_food_ingestion, initial_blood_glucose, 
+    u0 = [initial_body_weight, initial_net_energy_intake, initial_blood_glucose, 
         initial_glp_1,  initial_insulin, initial_insulin_sen, 
         initial_leptin, initial_leptin_sen, initial_glucotoxicity, 
         initial_lipotoxicity, initial_semaglutide_subcutaneous, initial_semaglutide_plasma, 
         initial_beta_cell_functioning, initial_agrp, initial_pomc, initial_dopamine];
 
-    p = (ref_body_weight, ref_food_ingestion, ref_blood_glucose,
+    p = (ref_body_weight, ref_net_energy_intake, ref_blood_glucose,
         ref_glp_1, ref_insulin, ref_insulin_sen, 
         ref_leptin, ref_leptin_sen, ref_glucotoxicity,
         ref_lipotoxicity, ref_semaglutide_subcutaneous, 
@@ -203,42 +203,42 @@ Functions to calculate the target values for each the state variables
 """
 
  # Body weigt, influenced by food ingestion
-function target_body_weight(ref_body_weight, ref_food_ingestion, current_food_ingestion, effect_fi_on_bw_interp, xs_fi_bw)
-    effect_fi_on_bw = do_interpolate(effect_fi_on_bw_interp,(current_food_ingestion / ref_food_ingestion), xs_fi_bw);
-    target_bw = calculate_target_variable(ref_body_weight, effect_fi_on_bw);
+function target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_bw_interp, xs_ei_bw)
+    effect_ei_on_bw = do_interpolate(effect_ei_on_bw_interp,(current_net_energy_intake / ref_net_energy_intake), xs_ei_bw);
+    target_bw = calculate_target_variable(ref_body_weight, effect_ei_on_bw);
 end
 
 # Food ingestion for the simplified model, influenced by GLP-1 and leptin levels
-function target_food_ingestion_simplified(ref_food_ingestion, ref_glp_1, ref_leptin, current_glp_1, current_leptin, effect_glp_on_fi_interp, effect_l_on_fi_interp, xs_glp_fi, xs_l_fi)
-    effect_glp_on_fi = do_interpolate(effect_glp_on_fi_interp,(current_glp_1 / ref_glp_1),xs_glp_fi);
-    effect_l_on_fi = do_interpolate(effect_l_on_fi_interp,(current_leptin / ref_leptin),xs_l_fi);
+function target_net_energy_intake_simplified(ref_net_energy_intake, ref_glp_1, ref_leptin, current_glp_1, current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
+    effect_glp_on_ei = do_interpolate(effect_glp_on_ei_interp,(current_glp_1 / ref_glp_1),xs_glp_ei);
+    effect_l_on_ei = do_interpolate(effect_l_on_ei_interp,(current_leptin / ref_leptin),xs_l_ei);
     
-    target_fi = calculate_target_variable(ref_food_ingestion, [effect_glp_on_fi, effect_l_on_fi]);
+    target_ei = calculate_target_variable(ref_net_energy_intake, [effect_glp_on_ei, effect_l_on_ei]);
 end
 
 # Food ingestion for the neural model, influenced by AgRP, POMC, and dopamine neural activity
-function target_food_ingestion_neural(ref_food_ingestion, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_fi_interp, effect_pomc_on_fi_interp, effect_do_on_fi_interp, xs_agrp_fi, xs_pomc_fi, xs_do_fi)
-    effect_agrp_on_fi = do_interpolate(effect_agrp_on_fi_interp,(current_agrp - ref_agrp),xs_agrp_fi);
-    effect_pomc_on_fi = do_interpolate(effect_pomc_on_fi_interp,(current_pomc - ref_pomc),xs_pomc_fi);
-    effect_do_on_fi = do_interpolate(effect_do_on_fi_interp,(current_dopamine - ref_dopamine),xs_do_fi);
+function target_net_energy_intake_neural(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
+    effect_agrp_on_ei = do_interpolate(effect_agrp_on_ei_interp,(current_agrp - ref_agrp),xs_agrp_ei);
+    effect_pomc_on_ei = do_interpolate(effect_pomc_on_ei_interp,(current_pomc - ref_pomc),xs_pomc_ei);
+    effect_do_on_ei = do_interpolate(effect_do_on_ei_interp,(current_dopamine - ref_dopamine),xs_do_ei);
 
-    target_fi = calculate_target_variable(ref_food_ingestion, [effect_agrp_on_fi, effect_pomc_on_fi, effect_do_on_fi]);
+    target_ei = calculate_target_variable(ref_net_energy_intake, [effect_agrp_on_ei, effect_pomc_on_ei, effect_do_on_ei]);
 end
 
 
 # Blood glucose, influenced by food ingestion, and insulin
-function target_blood_glucose(ref_blood_glucose, ref_food_ingestion, ref_insulin, current_food_ingestion, current_insulin, effect_fi_on_bg_interp, effect_i_on_bg_interp, xs_fi_bg, xs_i_bg)
-    effect_fi_on_bg = do_interpolate(effect_fi_on_bg_interp,(current_food_ingestion / ref_food_ingestion),xs_fi_bg);
+function target_blood_glucose(ref_blood_glucose, ref_net_energy_intake, ref_insulin, current_net_energy_intake, current_insulin, effect_ei_on_bg_interp, effect_i_on_bg_interp, xs_ei_bg, xs_i_bg)
+    effect_ei_on_bg = do_interpolate(effect_ei_on_bg_interp,(current_net_energy_intake / ref_net_energy_intake),xs_ei_bg);
     effect_i_on_bg = do_interpolate(effect_i_on_bg_interp,(current_insulin / ref_insulin),xs_i_bg);
     
-    target_bg = calculate_target_variable(ref_blood_glucose, [effect_fi_on_bg, effect_i_on_bg]);
+    target_bg = calculate_target_variable(ref_blood_glucose, [effect_ei_on_bg, effect_i_on_bg]);
 end
 
 # GLP-1, influenced by food ingestion
-function target_glp1(ref_glp_1, ref_food_ingestion, current_food_ingestion, effect_fi_on_glp_interp, xs_fi_glp);
-    effect_fi_on_glp = do_interpolate(effect_fi_on_glp_interp,(current_food_ingestion / ref_food_ingestion),xs_fi_glp);
+function target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_glp_interp, xs_ei_glp);
+    effect_ei_on_glp = do_interpolate(effect_ei_on_glp_interp,(current_net_energy_intake / ref_net_energy_intake),xs_ei_glp);
 
-    target_glp1 = calculate_target_variable(ref_glp_1, [effect_fi_on_glp]);
+    target_glp1 = calculate_target_variable(ref_glp_1, [effect_ei_on_glp]);
 end
 
 
@@ -348,7 +348,7 @@ function normalized_change(inputfile, odefile; callback_type = "none")
     sol = run_simulation(inputfile, odefile, callback_type = callback_type)                 
 
     body_weight     = ([round(u[1], digits=12) for u in sol.u][end] -ref_body_weight)/ref_body_weight 
-    food_ingestion   = ([round(u[2], digits=12) for u in sol.u][end] -ref_food_ingestion)/ref_food_ingestion 
+    net_energy_intake   = ([round(u[2], digits=12) for u in sol.u][end] -ref_net_energy_intake)/ref_net_energy_intake 
     blood_glucose   = ([round(u[3], digits=12) for u in sol.u][end] - ref_blood_glucose) / ref_blood_glucose 
     glp1            = ([round(u[4], digits=12) for u in sol.u][end]  - ref_glp_1) / ref_glp_1 
     insulin          = ([round(u[5], digits=12) for u in sol.u][end]  - ref_insulin) / ref_insulin 
@@ -359,7 +359,7 @@ function normalized_change(inputfile, odefile; callback_type = "none")
     glucotoxicity    = ([round(u[9], digits=12) for u in sol.u][end]  - ref_glucotoxicity) 
     lipotoxicity     = ([round(u[10], digits=12) for u in sol.u][end]  - ref_lipotoxicity) 
     
-    return [body_weight, food_ingestion, blood_glucose, glp1, insulin, leptin, insulin_sen, leptin_sen, beta, glucotoxicity, lipotoxicity]
+    return [body_weight, net_energy_intake, blood_glucose, glp1, insulin, leptin, insulin_sen, leptin_sen, beta, glucotoxicity, lipotoxicity]
 end
 
 function compute_x(x, dodge; width=1, gap=0.2, dodge_gap=0.03)

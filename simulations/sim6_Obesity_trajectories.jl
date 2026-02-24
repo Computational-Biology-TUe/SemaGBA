@@ -13,7 +13,7 @@ sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semagluti
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],
-    food_ingestion   = [round(u[2], digits=2) for u in sol.u],
+    net_energy_intake   = [round(u[2], digits=2) for u in sol.u],
     blood_glucose    = [round(u[3], digits=2) for u in sol.u],
     glp1             = [round(u[4], digits=9) for u in sol.u],
     insulin          = [round(u[5], digits=7) for u in sol.u],
@@ -32,19 +32,19 @@ variables_neural = extract_values(sol_neural)
 cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
 # Define data, labels, and linestyles for the plot
-y_data_simplified = [variables_simplified.body_weight, variables_simplified.food_ingestion, 
+y_data_simplified = [variables_simplified.body_weight, variables_simplified.net_energy_intake, 
         variables_simplified.blood_glucose, variables_simplified.insulin, variables_simplified.insulin_sen, 
         variables_simplified.glucotoxicity, variables_simplified.leptin, variables_simplified.leptin_sen, 
         variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_sub, 
         variables_simplified.beta]
 
-y_data_neural = [variables_neural.body_weight, variables_neural.food_ingestion, 
+y_data_neural = [variables_neural.body_weight, variables_neural.net_energy_intake, 
         variables_neural.blood_glucose, variables_neural.insulin, variables_neural.insulin_sen, 
         variables_neural.glucotoxicity, variables_neural.leptin, variables_neural.leptin_sen, 
         variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_sub, 
         variables_neural.beta]
 
-labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
+labels = ["Body weight\n[kg]", "Energy intake\n[kcal]", 
             "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
             "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
