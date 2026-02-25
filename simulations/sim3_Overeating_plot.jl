@@ -10,7 +10,7 @@ sol_treated = run_simulation(inputfile, odefile, callback_type= :overeating_with
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],
-    net_energy_intake   = [round(u[2], digits=2) for u in sol.u],
+    net_energy_intake  = [round(u[2], digits=2) for u in sol.u],
     blood_glucose    = [round(u[3], digits=2) for u in sol.u],
     glp1             = [round(u[4], digits=9) for u in sol.u],
     insulin          = [round(u[5], digits=7) for u in sol.u],
@@ -81,4 +81,3 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=10)
     
     f
 end
-

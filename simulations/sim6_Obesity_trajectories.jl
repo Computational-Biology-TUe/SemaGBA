@@ -74,3 +74,8 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
 
         f
 end
+
+percent_diff = (variables_simplified.net_energy_intake .- variables_neural.net_energy_intake) ./
+                       variables_simplified.net_energy_intake .*100
+
+maximum(abs.(percent_diff))

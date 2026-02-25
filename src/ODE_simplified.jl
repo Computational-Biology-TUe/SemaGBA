@@ -2,12 +2,12 @@ include("Data.jl")
 include("Functions.jl") 
 
 # Define interpolation functions for all effects
-effect_fi_on_bw_interp = interpolate_function(xs_fi_bw, ys_fi_bw)
-effect_glp_on_fi_interp = interpolate_function(xs_glp_fi, ys_glp_fi)
-effect_l_on_fi_interp = interpolate_function(xs_l_fi, ys_l_fi)
-effect_fi_on_bg_interp = interpolate_function(xs_fi_bg, ys_fi_bg)
+effect_ei_on_bw_interp = interpolate_function(xs_ei_bw, ys_ei_bw)
+effect_glp_on_ei_interp = interpolate_function(xs_glp_ei, ys_glp_ei)
+effect_l_on_ei_interp = interpolate_function(xs_l_ei, ys_l_ei)
+effect_ei_on_bg_interp = interpolate_function(xs_ei_bg, ys_ei_bg)
 effect_i_on_bg_interp = interpolate_function(xs_i_bg, ys_i_bg)
-effect_fi_on_glp_interp = interpolate_function(xs_fi_glp, ys_fi_glp)
+effect_ei_on_glp_interp = interpolate_function(xs_ei_glp, ys_ei_glp)
 effect_bg_on_i_interp = interpolate_function(xs_bg_i, ys_bg_i)
 effect_is_on_i_interp = interpolate_function(xs_is_i, ys_is_i)
 effect_glp_on_i_interp = interpolate_function(xs_glp_i, ys_glp_i)
@@ -45,20 +45,20 @@ function ODEs!(du,u,p,t)
 
     # Calculate variable values
     # Body weight
-    target_body_weigh = target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_energy_intake, effect_fi_on_bw_interp, xs_fi_bw)
+    target_body_weigh = target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_bw_interp, xs_ei_bw)
     du[1] = (target_body_weigh - current_body_weight) / body_weight_adj_time;
     
     # Food ingestion
-    target_food_ingest = target_net_energy_intake_simplified(ref_net_energy_intake, ref_glp_1, ref_leptin, (current_glp_1+ current_semaglutide_plasma), current_leptin, effect_glp_on_fi_interp, effect_l_on_fi_interp, xs_glp_fi, xs_l_fi)
+    target_food_ingest = target_net_energy_intake_simplified(ref_net_energy_intake, ref_glp_1, ref_leptin, (current_glp_1+ current_semaglutide_plasma), current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
     du[2] = (target_food_ingest - current_net_energy_intake) / net_energy_intake_adj_time;
 
     # Blood gluocose (maximal 180 mg/dL to prevent unrealistic values)
-    target_blood_gluc = target_blood_glucose(ref_blood_glucose, ref_net_energy_intake, ref_insulin, current_net_energy_intake, current_insulin, effect_fi_on_bg_interp, effect_i_on_bg_interp, xs_fi_bg, xs_i_bg)
+    target_blood_gluc = target_blood_glucose(ref_blood_glucose, ref_net_energy_intake, ref_insulin, current_net_energy_intake, current_insulin, effect_ei_on_bg_interp, effect_i_on_bg_interp, xs_ei_bg, xs_i_bg)
     target_blood_gluc = min(target_blood_gluc, 180.0);
     du[3] = (target_blood_gluc - current_blood_glucose) / blood_glucose_adj_time;
 
     # GLP-1 levels
-    target_glp = target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake, effect_fi_on_glp_interp, xs_fi_glp)
+    target_glp = target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_glp_interp, xs_ei_glp)
     du[4] = (target_glp - current_glp_1) / glp_1_adj_time;
 
     # Insulin levels (glucose-dependent)

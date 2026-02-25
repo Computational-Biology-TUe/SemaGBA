@@ -241,22 +241,15 @@ function target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake
     target_glp1 = calculate_target_variable(ref_glp_1, [effect_ei_on_glp]);
 end
 
-
 # Insulin, influenced by blood glucucose, insulin sensitivity, beta-cell function, and GLP-1 (dependent on blood glucose), 
 function target_insulin(ref_insulin, ref_blood_glucose, ref_insulin_sen, ref_glp_1,ref_beta_cell_functioning, current_blood_glucose,current_insulin_sen,current_glp_1,current_beta_cell_functioning, effect_bg_on_i_interp,effect_is_on_i_interp,effect_glp_on_i_interp,effect_b_on_i_interp, xs_bg_i, xs_is_i, xs_glp_i, xs_b_i);
     effect_bg_on_i = do_interpolate(effect_bg_on_i_interp,(current_blood_glucose/ ref_blood_glucose),xs_bg_i);
     effect_is_on_i = do_interpolate(effect_is_on_i_interp,(current_insulin_sen - ref_insulin_sen),xs_is_i);
     effect_b_on_i = do_interpolate(effect_b_on_i_interp,(ref_beta_cell_functioning - current_beta_cell_functioning),xs_b_i);
 
-    # The effect of GLP-1 is dependent on blood glucose levels
-    if current_blood_glucose == ref_blood_glucose
-        effect_glp1 = 1
-    elseif (current_blood_glucose / 90 > 1.05 ) && (current_glp_1/ref_glp_1 > 1.01);
-        effect_glp1= ((current_glp_1 / ref_glp_1)* (current_blood_glucose/90));
-    else 
-        effect_glp1 = 1
-    end
-    effect_glp_on_i = do_interpolate(effect_glp_on_i_interp,effect_glp1,xs_glp_i);
+    effect_glp_on_i1 = do_interpolate(effect_glp_on_i_interp,(current_glp_1 / ref_glp_1),xs_glp_i);
+    glucose_weight = clamp((current_blood_glucose - (90 * 1.00)) / (90 * (1.10 - 1.00)), 0.0, 1.0);
+    effect_glp_on_i = 1.0 + (effect_glp_on_i1-1) * glucose_weight
 
     target_insulin = calculate_target_variable(ref_insulin, [effect_bg_on_i, effect_glp_on_i, effect_is_on_i, effect_b_on_i]);
 end

@@ -4,10 +4,10 @@ include("Functions.jl")
 using Interpolations
 
 # Define interpolation functions for all effects
-effect_fi_on_bw_interp = interpolate_function(xs_fi_bw, ys_fi_bw)
-effect_fi_on_bg_interp = interpolate_function(xs_fi_bg, ys_fi_bg)
+effect_ei_on_bw_interp = interpolate_function(xs_ei_bw, ys_ei_bw)
+effect_ei_on_bg_interp = interpolate_function(xs_ei_bg, ys_ei_bg)
 effect_i_on_bg_interp = interpolate_function(xs_i_bg, ys_i_bg)
-effect_fi_on_glp_interp = interpolate_function(xs_fi_glp, ys_fi_glp)
+effect_ei_on_glp_interp = interpolate_function(xs_ei_glp, ys_ei_glp)
 effect_bg_on_i_interp = interpolate_function(xs_bg_i, ys_bg_i)
 effect_is_on_i_interp = interpolate_function(xs_is_i, ys_is_i)
 effect_glp_on_i_interp = interpolate_function(xs_glp_i, ys_glp_i)
@@ -38,9 +38,9 @@ effect_i_on_do_interp = interpolate_function(xs_i_do, ys_i_do)
 effect_l_on_do_interp = interpolate_function(xs_l_do, ys_l_do)
 effect_glp_on_do_interp = interpolate_function(xs_glp_do, ys_glp_do)
 
-effect_agrp_on_fi_interp = interpolate_function(xs_agrp_fi, ys_agrp_fi)
-effect_pomc_on_fi_interp = interpolate_function(xs_pomc_fi, ys_pomc_fi)
-effect_do_on_fi_interp = interpolate_function(xs_do_fi, ys_do_fi)
+effect_agrp_on_ei_interp = interpolate_function(xs_agrp_ei, ys_agrp_ei)
+effect_pomc_on_ei_interp = interpolate_function(xs_pomc_ei, ys_pomc_ei)
+effect_do_on_ei_interp = interpolate_function(xs_do_ei, ys_do_ei)
 
 function ODEs!(du,u,p,t)
     """Function contains the differential equations for the state variables.
@@ -63,20 +63,20 @@ function ODEs!(du,u,p,t)
 
     # Calculate derivatives for each state variable 
     # Body weight
-    target_body_weigh = target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_energy_intake, effect_fi_on_bw_interp, xs_fi_bw)
+    target_body_weigh = target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_bw_interp, xs_ei_bw)
     du[1] = (target_body_weigh - current_body_weight) / body_weight_adj_time
     
     # Food ingestion
-    target_food_ingest =  target_net_energy_intake_neural(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_fi_interp, effect_pomc_on_fi_interp, effect_do_on_fi_interp, xs_agrp_fi, xs_pomc_fi, xs_do_fi)
+    target_food_ingest =  target_net_energy_intake_neural(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
     du[2] = (target_food_ingest - current_net_energy_intake) / net_energy_intake_adj_time
 
     # Blood gluocose (maximal 180 mg/dL to prevent unrealistic values)
-    target_blood_gluc = target_blood_glucose(ref_blood_glucose, ref_net_energy_intake, ref_insulin, current_net_energy_intake, current_insulin, effect_fi_on_bg_interp, effect_i_on_bg_interp, xs_fi_bg, xs_i_bg)
+    target_blood_gluc = target_blood_glucose(ref_blood_glucose, ref_net_energy_intake, ref_insulin, current_net_energy_intake, current_insulin, effect_ei_on_bg_interp, effect_i_on_bg_interp, xs_ei_bg, xs_i_bg)
     target_blood_gluc = min(target_blood_gluc, 180.0)
     du[3] = (target_blood_gluc - current_blood_glucose) / blood_glucose_adj_time
 
     # GLP-1 levels
-    target_glp = target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake, effect_fi_on_glp_interp, xs_fi_glp)
+    target_glp = target_glp1(ref_glp_1, ref_net_energy_intake, current_net_energy_intake, effect_ei_on_glp_interp, xs_ei_glp)
     du[4] = (target_glp - current_glp_1) / glp_1_adj_time
 
     # Insulin levels (glucose-dependent)

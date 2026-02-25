@@ -6,12 +6,14 @@ inputfile_diabetes = "../input/Inputs_diabetes.jl"
 inputfile_obesity = "../input/Inputs_obesity.jl" 
 odefile = "../src/ODE_simplified.jl" 
 
+sol = run_simulation(inputfile_obesity, odefile, callback_type = :semaglutide)                 
+
 # Compute normalized changes for diabetic and obesity scenario
 vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
 vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = :semaglutide);
 
 # Barplot setup
-var_names = ["Body weight*", "Energy intake*", "Blood glucose*", 
+var_names = ["Body weight*", "Net energy intake*", "Blood glucose*", 
             "GLP-1*", "Insulin*", "Leptin*", 
             "Insulin sensitivity", "Leptin sensitivity", "β-cell function", 
             "Glucotoxicity", "Lipotoxicity"];
