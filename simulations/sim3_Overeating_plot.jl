@@ -32,20 +32,20 @@ cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 y_data = [variables_untreated.body_weight, variables_untreated.net_energy_intake, 
         variables_untreated.blood_glucose, variables_untreated.insulin, variables_untreated.insulin_sen, 
         variables_untreated.glucotoxicity, variables_untreated.leptin, variables_untreated.leptin_sen, 
-        variables_untreated.lipotoxicity, variables_untreated.glp1, variables_untreated.semaglu_sub, 
+        variables_untreated.lipotoxicity, variables_untreated.glp1, variables_untreated.semaglu_plasma, 
         variables_untreated.beta]
 
 y_data_treated = [variables_treated.body_weight, variables_treated.net_energy_intake, 
         variables_treated.blood_glucose, variables_treated.insulin, variables_treated.insulin_sen, 
         variables_treated.glucotoxicity, variables_treated.leptin, variables_treated.leptin_sen, 
-        variables_treated.lipotoxicity, variables_treated.glp1, variables_treated.semaglu_sub, 
+        variables_treated.lipotoxicity, variables_treated.glp1, variables_treated.semaglu_plasma, 
         variables_treated.beta]
 
-labels = ["Body weight\n[kg]", "Energy intake\n[kcal]", 
+labels = ["Body weight\n[kg]", "Net energy intake\n[kcal]", 
             "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
             "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
-            "β-cell functioning\n[mg/dL]"]
+            "β-cell functioning\n[-]"]
 
 # Create figure
 figure = let f = Figure(size=(15cm,17cm), fontsize=10)

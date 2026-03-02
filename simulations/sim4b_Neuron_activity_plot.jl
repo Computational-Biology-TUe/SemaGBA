@@ -31,7 +31,7 @@ linestyles = [(:dash, :dense), :solid, (:dot, :dense)];
 figure = let f = Figure(size=(17cm,14cm), fontsize=12)
     axs = Axis[]
         
-    ax1 = Axis(f[1,1], xlabel="Time [days]", ylabel="Neuron activity [-]", title="Diabetic", titlesize =18, xlabelsize = 16, ylabelsize = 16)
+    ax1 = Axis(f[1,1], xlabel="Time [days]", ylabel="Neuron activity [-]", title="Diabetes", titlesize =18, xlabelsize = 16, ylabelsize = 16)
     for i in 1:3
         lines!(ax1, sol_diabetes.t, y_data_diabetic[i], color=colors[i], label=labels[i], linestyle=linestyles[i], linewidth = 3) 
 

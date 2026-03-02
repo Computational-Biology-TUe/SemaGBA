@@ -35,20 +35,20 @@ cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 y_data_simplified = [variables_simplified.body_weight, variables_simplified.net_energy_intake, 
         variables_simplified.blood_glucose, variables_simplified.insulin, variables_simplified.insulin_sen, 
         variables_simplified.glucotoxicity, variables_simplified.leptin, variables_simplified.leptin_sen, 
-        variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_sub, 
+        variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_plasma, 
         variables_simplified.beta]
 
 y_data_neural = [variables_neural.body_weight, variables_neural.net_energy_intake, 
         variables_neural.blood_glucose, variables_neural.insulin, variables_neural.insulin_sen, 
         variables_neural.glucotoxicity, variables_neural.leptin, variables_neural.leptin_sen, 
-        variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_sub, 
+        variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_plasma, 
         variables_neural.beta]
 
-labels = ["Body weight\n[kg]", "Energy intake\n[kcal]", 
+labels = ["Body weight\n[kg]", "Net energy intake\n[kcal]", 
             "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
             "Glucotoxicity\n[-]", "Leptin\n[mg/dL]", "Leptin sensitivity\n[-]", 
             "Lipotoxicity\n[-]", "GLP-1\n[mg/dL]", "Semaglutide\n[mg/dL]", 
-            "β-cell functioning\n[mg/dL]"]
+            "β-cell functioning\n[-]"]
 
 # Create figure
 figure = let f = Figure(size=(15cm,17cm), fontsize=12)
@@ -65,7 +65,7 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
             Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
         end
         Legend(f[4,0:2], axs[1], orientation=:horizontal)
-        Label(f[begin-1, 0:2],"Obesity treatement with 2.4mg semaglutide", fontsize=20, font = :bold)
+        Label(f[begin-1, 0:2],"Obesity treatement with 2.4mg semaglutide", fontsize=16, font = :bold)
         
         # save figure
         figdir = joinpath(@__DIR__, "..", "figures")
@@ -75,6 +75,7 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         f
 end
 
+# Calculate percent difference in net energy intake between simplified and neural model
 percent_diff = (variables_simplified.net_energy_intake .- variables_neural.net_energy_intake) ./
                        variables_simplified.net_energy_intake .*100
 

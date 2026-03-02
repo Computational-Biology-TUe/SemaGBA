@@ -1,6 +1,6 @@
 include("Functions.jl") 
 using Plots
-sol= sol_simplified
+sol= sol_neural
 body_weight =   [u[1] for u in sol.u];
 food_ingestion = [u[2] for u in sol.u];
 blood_glucose =  [u[3] for u in sol.u];
@@ -341,10 +341,29 @@ elseif variable_name == :dopamine
     Plots.plot(sol.t, list_effect_i_on_dopamine, label="effect insulin on dopamine neuron activity", xlabel= "time[days]", ylabel="effect[-]")
     Plots.plot!(sol.t, list_effect_l_on_dopamine, label="effect leptin on dopamine neuron activity", xlabel= "time[days]", ylabel="effect[-]")
     Plots.plot!(sol.t, list_effect_glp_on_dopamine, label="effect GLP-1 + semaglutide on dopamine neuron activity", xlabel= "time[days]", ylabel="effect[-]", legend=:top)
-    Plots.plot!(twinx(),sol.t, dopamine, label="dopamine neuron activity", linestyle=:dash, color=:black, legend=false)
+    Plots.plot!(twinx(),sol.t, dopamine, label="dopamine neuron activity", linestyle=:dash, color=:black, legend=:right)
 
 else
     println("Invalid variable name")
+end
+
+
+y_data_neural2 = y_data_simplified[2] + y_data_simplified[2] *0.001
+
+figure = let f = Figure(size=(20cm,17cm), fontsize=25, backgroundcolor = "#EAEAEA" )
+    axs = Axis[]
+    tr_text = split("ABCDEFGHIJKL", "")
+
+    ax = Axis(f[1,1], xlabel="Time [days]", ylabel=labels[2])
+    lines!(ax, sol_simplified.t, y_data_simplified[2], color = "#D0D3D6", label="Reduced\nmodel", linewidth = 6)
+    lines!(ax, sol_simplified.t, y_data_neural2, color="#498756", label="Extended\nmodel", linestyle= :dash, linewidth = 6) 
+    push!(axs, ax)
+
+    Legend(f[1,2], axs[1])
+
+    #Label(f[begin-1, 0:1],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)
+
+    f
 end
 
 
