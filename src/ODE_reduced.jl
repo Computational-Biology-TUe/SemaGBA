@@ -49,7 +49,7 @@ function ODEs!(du,u,p,t)
     du[1] = (target_body_weigh - current_body_weight) / body_weight_adj_time;
     
     # Food ingestion
-    target_food_ingest = target_net_energy_intake_simplified(ref_net_energy_intake, ref_glp_1, ref_leptin, (current_glp_1+ current_semaglutide_plasma), current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
+    target_food_ingest = target_net_energy_intake_reduced(ref_net_energy_intake, ref_glp_1, ref_leptin, (current_glp_1+ current_semaglutide_plasma), current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
     du[2] = (target_food_ingest - current_net_energy_intake) / net_energy_intake_adj_time;
 
     # Blood gluocose (maximal 180 mg/dL to prevent unrealistic values)

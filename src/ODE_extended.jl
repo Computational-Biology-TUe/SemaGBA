@@ -67,7 +67,7 @@ function ODEs!(du,u,p,t)
     du[1] = (target_body_weigh - current_body_weight) / body_weight_adj_time
     
     # Food ingestion
-    target_food_ingest =  target_net_energy_intake_neural(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
+    target_food_ingest =  target_net_energy_intake_extended(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
     du[2] = (target_food_ingest - current_net_energy_intake) / net_energy_intake_adj_time
 
     # Blood gluocose (maximal 180 mg/dL to prevent unrealistic values)

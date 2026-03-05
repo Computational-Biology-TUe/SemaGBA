@@ -1,10 +1,10 @@
 using Interpolations, Plots, CairoMakie
 
-# Define input and ODE file
+# Include data and function files
 include("../src/Data.jl");
 include("../src/Functions.jl")
 
-# Define data and labels for the plot
+# Define data and labels 
 xdata = [xs_i_pomc, xs_l_pomc, xs_glp_pomc, xs_agrp_pomc, xs_do_pomc]
 ydata = [ys_i_pomc, ys_l_pomc, ys_glp_pomc, ys_agrp_pomc, ys_do_pomc]
 xlabel = ["Current / reference insulin [-]", "Current / reference leptin [-]", "Current / reference GLP-1 [-]", "Current - reference AgRP [-]", "Current - reference dopamine [-]"]
@@ -22,7 +22,8 @@ figure = let f = Figure(fontsize=12)
         push!(axs, ax)
         Label(f[x,y, TopLeft()], tr_text[i], padding = (0, 15, 15, 0), font=:bold, fontsize=16)
     end
-            
+
+    # Add title            
     Label(f[begin-1, 0:2],"Effect functions for POMC neuron activity", fontsize=15, font = :bold)
 
     # save figure

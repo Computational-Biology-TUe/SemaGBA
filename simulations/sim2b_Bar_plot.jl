@@ -4,12 +4,12 @@ include("../src/Functions.jl")
 # Define input and ODE file
 inputfile_diabetes = "../input/Inputs_diabetes.jl"
 inputfile_obesity = "../input/Inputs_obesity.jl" 
-odefile = "../src/ODE_simplified.jl" 
+odefile = "../src/ODE_reduced.jl" 
 
 sol = run_simulation(inputfile_obesity, odefile, callback_type = :semaglutide)                 
 
-# Compute normalized changes for diabetic and obesity scenario
-vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
+# Compute normalized changes for diabetes and obesity scenario
+vars_diabetes = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
 vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = :semaglutide);
 
 # Barplot setup
@@ -22,7 +22,7 @@ n = length(var_names); # number of variables
 k = 2;                 # number of groups
 cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
-ys_flat = vcat(vars_diabetic,vars_obesity);  # flatten values for plotting
+ys_flat = vcat(vars_diabetes,vars_obesity);  # flatten values for plotting
 xs_flat = repeat(1:n, outer=k);              # x-positions for each varible
 groups = repeat(1:k,inner=n);              # group index for positioning
 

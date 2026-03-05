@@ -4,12 +4,12 @@ include("../src/Functions.jl")
 
 # Define input and ODE file
 inputfile = "../input/Inputs_obesity.jl"
-odefile_simplified = "../src/ODE_simplified.jl" 
-odefile_neural = "../src/ODE_neural.jl" 
+odefile_reduced = "../src/ODE_reduced.jl" 
+odefile_extended = "../src/ODE_extended.jl" 
 
-# Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
-sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
-sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
+# Run simulation with the reduced and extended ODE model
+sol_reduced = run_simulation(inputfile, odefile_reduced, callback_type= :semaglutide); 
+sol_extended = run_simulation(inputfile, odefile_extended, callback_type= :semaglutide); 
 
 extract_values(sol) = (
     body_weight      = [round(u[1], digits=2) for u in sol.u],
@@ -26,23 +26,23 @@ extract_values(sol) = (
     semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
     beta             = [round(u[13], digits=3) for u in sol.u])
 
-variables_simplified = extract_values(sol_simplified)
-variables_neural = extract_values(sol_neural)
+variables_reduced = extract_values(sol_reduced)
+variables_extended = extract_values(sol_extended)
 
 cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
 # Define data, labels, and linestyles for the plot
-y_data_simplified = [variables_simplified.body_weight, variables_simplified.net_energy_intake, 
-        variables_simplified.blood_glucose, variables_simplified.insulin, variables_simplified.insulin_sen, 
-        variables_simplified.glucotoxicity, variables_simplified.leptin, variables_simplified.leptin_sen, 
-        variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_plasma, 
-        variables_simplified.beta]
+y_data_reduced = [variables_reduced.body_weight, variables_reduced.net_energy_intake, 
+        variables_reduced.blood_glucose, variables_reduced.insulin, variables_reduced.insulin_sen, 
+        variables_reduced.glucotoxicity, variables_reduced.leptin, variables_reduced.leptin_sen, 
+        variables_reduced.lipotoxicity, variables_reduced.glp1, variables_reduced.semaglu_plasma, 
+        variables_reduced.beta]
 
-y_data_neural = [variables_neural.body_weight, variables_neural.net_energy_intake, 
-        variables_neural.blood_glucose, variables_neural.insulin, variables_neural.insulin_sen, 
-        variables_neural.glucotoxicity, variables_neural.leptin, variables_neural.leptin_sen, 
-        variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_plasma, 
-        variables_neural.beta]
+y_data_extended = [variables_extended.body_weight, variables_extended.net_energy_intake, 
+        variables_extended.blood_glucose, variables_extended.insulin, variables_extended.insulin_sen, 
+        variables_extended.glucotoxicity, variables_extended.leptin, variables_extended.leptin_sen, 
+        variables_extended.lipotoxicity, variables_extended.glp1, variables_extended.semaglu_plasma, 
+        variables_extended.beta]
 
 labels = ["Body weight\n[kg]", "Net energy intake\n[kcal]", 
             "Blood glucose\n[mg/dL]", "Insulin\n[μU/mL]", "Insulin sensitivity\n[-]", 
@@ -54,13 +54,13 @@ labels = ["Body weight\n[kg]", "Net energy intake\n[kcal]",
 figure = let f = Figure(size=(15cm,17cm), fontsize=12)
     axs = Axis[]
     tr_text = split("ABCDEFGHIJKL", "")
-        for i in eachindex(y_data_simplified)
+        for i in eachindex(y_data_reduced)
 
             x = (i-1) ÷ 3 
             y = (i-1) % 3
             ax = Axis(f[x,y], xlabel="Time [days]", ylabel=labels[i])
-            lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Reduced model")
-            lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="Extended model", linestyle= :dash)
+            lines!(ax, sol_reduced.t, y_data_reduced[i], color=Makie.wong_colors()[2], label="Reduced model")
+            lines!(ax, sol_extended.t, y_data_extended[i], color=Makie.wong_colors()[1], label="Extended model", linestyle= :dash)
             push!(axs, ax)
             Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
         end
@@ -75,8 +75,8 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         f
 end
 
-# Calculate percent difference in net energy intake between simplified and neural model
-percent_diff = (variables_simplified.net_energy_intake .- variables_neural.net_energy_intake) ./
-                       variables_simplified.net_energy_intake .*100
+# Calculate percent difference in net energy intake between reduced and neural model
+percent_diff = (variables_reduced.net_energy_intake .- variables_extended.net_energy_intake) ./
+                       variables_reduced.net_energy_intake .*100
 
 maximum(abs.(percent_diff))

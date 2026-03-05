@@ -4,7 +4,7 @@ include("../src/Functions.jl")
 # Define input and ODE file
 inputfile_diabetes = "../input/Inputs_diabetes.jl"
 inputfile_obesity = "../input/Inputs_obesity.jl" 
-odefile = "../src/ODE_neural.jl" 
+odefile = "../src/ODE_extended.jl" 
 
 function compute_effects(variables, inputfile)
         include(inputfile)

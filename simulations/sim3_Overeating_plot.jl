@@ -2,7 +2,7 @@ using CairoMakie
 
 # Define input and ODE file
 inputfile = "../input/Inputs_healthy.jl"
-odefile = "../src/ODE_simplified.jl" 
+odefile = "../src/ODE_reduced.jl" 
 
 # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
 sol_untreated = run_simulation(inputfile, odefile, callback_type= :overeating); 
@@ -66,7 +66,8 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=10)
         elseif i == 3  
             hlines!(ax, [125.0], linestyle=:dash, linewidth=2, color=Makie.wong_colors()[4])
         end
-
+        
+        # add vertical line for moment of treatment initiation
         vlines!(ax, 245.0, linestyle=:dash, linewidth=2, color=Makie.wong_colors()[3])
         push!(axs, ax)
         Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)

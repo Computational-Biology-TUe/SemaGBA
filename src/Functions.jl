@@ -208,16 +208,16 @@ function target_body_weight(ref_body_weight, ref_net_energy_intake, current_net_
     target_bw = calculate_target_variable(ref_body_weight, effect_ei_on_bw);
 end
 
-# Food ingestion for the simplified model, influenced by GLP-1 and leptin levels
-function target_net_energy_intake_simplified(ref_net_energy_intake, ref_glp_1, ref_leptin, current_glp_1, current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
+# Food ingestion for the reduced model, influenced by GLP-1 and leptin levels
+function target_net_energy_intake_reduced(ref_net_energy_intake, ref_glp_1, ref_leptin, current_glp_1, current_leptin, effect_glp_on_ei_interp, effect_l_on_ei_interp, xs_glp_ei, xs_l_ei)
     effect_glp_on_ei = do_interpolate(effect_glp_on_ei_interp,(current_glp_1 / ref_glp_1),xs_glp_ei);
     effect_l_on_ei = do_interpolate(effect_l_on_ei_interp,(current_leptin / ref_leptin),xs_l_ei);
     
     target_ei = calculate_target_variable(ref_net_energy_intake, [effect_glp_on_ei, effect_l_on_ei]);
 end
 
-# Food ingestion for the neural model, influenced by AgRP, POMC, and dopamine neural activity
-function target_net_energy_intake_neural(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
+# Food ingestion for the extended model, influenced by AgRP, POMC, and dopamine neural activity
+function target_net_energy_intake_extended(ref_net_energy_intake, ref_agrp, ref_pomc, ref_dopamine, current_agrp, current_pomc, current_dopamine, effect_agrp_on_ei_interp, effect_pomc_on_ei_interp, effect_do_on_ei_interp, xs_agrp_ei, xs_pomc_ei, xs_do_ei)
     effect_agrp_on_ei = do_interpolate(effect_agrp_on_ei_interp,(current_agrp - ref_agrp),xs_agrp_ei);
     effect_pomc_on_ei = do_interpolate(effect_pomc_on_ei_interp,(current_pomc - ref_pomc),xs_pomc_ei);
     effect_do_on_ei = do_interpolate(effect_do_on_ei_interp,(current_dopamine - ref_dopamine),xs_do_ei);
