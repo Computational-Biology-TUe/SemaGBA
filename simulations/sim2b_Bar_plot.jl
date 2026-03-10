@@ -6,8 +6,6 @@ inputfile_diabetes = "../input/Inputs_diabetes.jl"
 inputfile_obesity = "../input/Inputs_obesity.jl" 
 odefile = "../src/ODE_reduced.jl" 
 
-sol = run_simulation(inputfile_obesity, odefile, callback_type = :semaglutide)                 
-
 # Compute normalized changes for diabetes and obesity scenario
 vars_diabetes = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
 vars_obesity = normalized_change(inputfile_obesity, odefile, callback_type = :semaglutide);

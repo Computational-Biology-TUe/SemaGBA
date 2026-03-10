@@ -1,7 +1,7 @@
 """ This file contains all inputs to simulate a healthy individual"""
 
 # Define the duration of the simulation
-t_days =365*5; #days
+t_days =365 #*5; #days
 
 # Define the pharmacokinetic parameters for the semaglutide injections
 bioavailability = 0.89; #dimentionless
@@ -29,6 +29,7 @@ release_times = [[7.0*i for i in 35:38],
                 [7.0*i for i in 39:42],
                 [7.0*i for i in 43:400]]
 
+
 # Wegovy with 2.4 mg semaglutide maintenance dose
 #injection_doses = [injection_0_25_mg, 
 #                    injection_0_5_mg, 
@@ -52,7 +53,7 @@ To simulate steady-state, the initial and reference values are set equal.
 All values are daily averages."""
 
 # Parameters for body weight
-ref_body_weight = initial_body_weight = 80.0; #kg
+ref_body_weight= initial_body_weight =  80.0; #kg
 body_weight_adj_time            = 300.0; #days 
 
 # Parameters for energy intake
@@ -60,7 +61,7 @@ body_weight_adj_time            = 300.0; #days
 ref_net_energy_intake           = 2000.0; #kcal
 food_ingestion                  = 2500.0; #kcal
 energy_expenditure              = 500.0; #kcal
-initial_net_energy_intake = food_ingestion - energy_expenditure
+initial_net_energy_intake = food_ingestion - energy_expenditure; #kcal
 net_energy_intake_adj_time         = 100.0; #days
 
 # Parameters for blood glucose
@@ -79,7 +80,7 @@ ref_semaglutide_plasma = initial_semaglutide_plasma = 0.0; #mg/dl
 ref_insulin = initial_insulin   = 8.0; #μU/mL 
 insulin_adj_time                = 10.0; #days
 
-# Parameters for insulin sensivitiy 
+# Parameters for insulin sensitivity 
 ref_insulin_sen = initial_insulin_sen= 0.8; #dimensionless
 insulin_sen_adj_time            = 100.0;  #days
 

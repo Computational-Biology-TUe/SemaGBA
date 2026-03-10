@@ -1,87 +1,13 @@
 include("Functions.jl") 
-using Plots
-sol= sol_neural
-body_weight =   [u[1] for u in sol.u];
-food_ingestion = [u[2] for u in sol.u];
-blood_glucose =  [u[3] for u in sol.u];
-glp1 =      [u[4] for u in sol.u];
-insulin =   [u[5] for u in sol.u];
-insulin_sen = [u[6] for u in sol.u];
-leptin =    [u[7] for u in sol.u];
-leptin_sen =    [u[8] for u in sol.u];
-glucotoxicity = [u[9] for u in sol.u];
-lipotoxicity =  [u[10] for u in sol.u];
-semaglu_sub = [u[11] for u in sol.u]
-semaglu_plasma = [u[12] for u in sol.u]
-beta_cell = [u[13] for u in sol.u]; 
-
-#= list_effect_bg_on_i = [
-        do_interpolate(effect_bg_on_i_interp, (point / ref_blood_glucose), xs_bg_i)
-        for point in blood_glucose
-    ]
-list_effect_is_on_i = [
-        do_interpolate(effect_is_on_i_interp, (point - ref_insulin_sen), xs_is_i)
-        for point in insulin_sen
-    ]
-    
-effect_glp1_over_time = Float64[]
-
-for (i, bg) in enumerate(blood_glucose)
-        glp = glp1[i]
-        sema = semaglu_plasma[i]
-        bg = blood_glucose[i]
-
-
-        #= if bg == ref_blood_glucose
-            effect_val = 1.0
-        elseif (bg / 90 > 1.05) && ((glp+sema)/ref_glp_1>1.01)
-            effect_val = ((glp + sema) / ref_glp_1) * (bg / 90)
-        
-        else
-            effect_val = 1.0
-        end =#
-
-        effect_glp_on_i1 = do_interpolate(effect_glp_on_i_interp,((glp + sema) / ref_glp_1),xs_glp_i);
-        glucose_weight = clamp((bg - (90 * 1.00)) / (90 * (1.10 - 1.00)), 0.0, 1.0);
-        effect_val = 1.0 + (effect_glp_on_i1-1) * glucose_weight
-
-        push!(effect_glp1_over_time, effect_val)
-end
-
-
-list_effect_b_on_i = [
-        do_interpolate(effect_b_on_i_interp, (ref_beta_cell_functioning - point), xs_b_i)
-
-        for point in beta_cell
-    ]
-
-Plots.plot(sol.t, list_effect_bg_on_i, label="effect blood glucose on insulin")
-Plots.plot!(sol.t, list_effect_is_on_i, label="effect insulin sensitivity on insulin")
-Plots.plot!(sol.t, effect_glp1_over_time, label="effect GLP-1 + semaglutide on insulin")
-Plots.plot!(sol.t, list_effect_b_on_i, label="effect beta-cell functioning on insulin", legend =:right)
-
-Plots.plot!(twinx(),sol.t, insulin, label="insulin", linestyle=:dash, color=:black, legend=:topleft) =#
-
-list_effect_li_on_is = [
-        do_interpolate(effect_li_on_is_interp, (point - ref_lipotoxicity), xs_li_is, ys_li_is)
-        for point in lipotoxicity
-    ]
-list_effect_g_on_is = [
-        do_interpolate(effect_g_on_is_interp,(point - ref_glucotoxicity), xs_g_is, ys_g_is)
-        for point in glucotoxicity
-    ]
-
-Plots.plot(sol.t, list_effect_li_on_is, label="effect lipotoxicity on insulin sensitivity")
-Plots.plot!(sol.t, list_effect_g_on_is, label="effect glucotoxicity on insulin sensitivity")
-Plots.plot!(twinx(),sol.t, insulin_sen, label="insulin sensitivity", linestyle=:dash, color=:black, legend=:bottom)
-
 
 using Pkg, DifferentialEquations, Plots, DiffEqCallbacks
 
-variable_name = :dopamine
-sol = sol_neural
+sol = run_simulation("../input/Inputs_healthy.jl", "../src/ODE_reduced.jl" , callback_type= :none); 
+
+
+variable_name = :body_weight
 body_weight =   [u[1] for u in sol.u];
-food_ingestion = [u[2] for u in sol.u];
+energy_intake = [u[2] for u in sol.u];
 blood_glucose =  [u[3] for u in sol.u];
 glp1 =      [u[4] for u in sol.u];
 insulin =   [u[5] for u in sol.u];
@@ -93,62 +19,62 @@ lipotoxicity =  [u[10] for u in sol.u];
 semaglu_sub = [u[11] for u in sol.u]
 semaglu_plasma = [u[12] for u in sol.u]
 beta_cell = [u[13] for u in sol.u]; 
-agrp = [u[14] for u in sol.u]
-pomc = [u[15] for u in sol.u]
-dopamine = [u[16] for u in sol.u]
+#agrp = [u[14] for u in sol.u]
+#pomc = [u[15] for u in sol.u]
+#dopamine = [u[16] for u in sol.u]
 
 if variable_name == :body_weight
-    list_effect_fi_on_bw = [
-        do_interpolate(effect_fi_on_bw_interp, (point / ref_food_ingestion), xs_fi_bw)
-        for point in food_ingestion
+    list_effect_ei_on_bw = [
+        do_interpolate(effect_ei_on_bw_interp, (point / ref_net_energy_intake), xs_ei_bw)
+        for point in energy_intake
     ]
 
-    Plots.plot(sol.t, list_effect_fi_on_bw, label="effect food ingestion on body weight", xlabel= "time[days]", ylabel="effect[-]")
+    Plots.plot(sol.t, list_effect_ei_on_bw, label="effect food ingestion on body weight", xlabel= "time[days]", ylabel="effect[-]")
     Plots.plot!(twinx(),sol.t, body_weight, label="body weight", linestyle=:dash, color=:black, legend=:bottom)
 
 
-elseif variable_name == :food_ingestion
+elseif variable_name == :energy_intake
 
-    list_effect_agrp_on_fi = [
-        do_interpolate(effect_agrp_on_fi_interp,(point - ref_agrp), xs_agrp_fi)
+    list_effect_agrp_on_ei = [
+        do_interpolate(effect_agrp_on_ei_interp,(point - ref_agrp), xs_agrp_ei)
         for point in agrp
     ]        
-    list_effect_pomc_on_fi = [
-        do_interpolate(effect_pomc_on_fi_interp,(point - ref_pomc),xs_pomc_fi)
+    list_effect_pomc_on_ei = [
+        do_interpolate(effect_pomc_on_ei_interp,(point - ref_pomc),xs_pomc_ei)
         for point in pomc
     ]
 
-    list_effect_do_on_fi = [
-        do_interpolate(effect_do_on_fi_interp,(point - ref_dopamine),xs_do_fi)
+    list_effect_do_on_ei = [
+        do_interpolate(effect_do_on_ei_interp,(point - ref_dopamine),xs_do_ei)
         for point in dopamine
     ]
-    Plots.plot(sol.t, list_effect_agrp_on_fi, label="effect AgRP neuron activity on food ingestion", xlabel= "time[days]", ylabel="effect[-]")
-    Plots.plot!(sol.t, list_effect_pomc_on_fi, label="effect POMC neuron activity  on food ingestion", legend=:right)
-    Plots.plot!(sol.t, list_effect_do_on_fi, label="effect dopamine neuron activity  on food ingestion", legend=:right)
-    Plots.plot!(twinx(),sol.t, food_ingestion, label="food ingestion", linestyle=:dash, color=:black, legend=:bottom)
+    Plots.plot(sol.t, list_effect_agrp_on_ei, label="effect AgRP neuron activity on food ingestion", xlabel= "time[days]", ylabel="effect[-]")
+    Plots.plot!(sol.t, list_effect_pomc_on_ei, label="effect POMC neuron activity  on food ingestion", legend=:right)
+    Plots.plot!(sol.t, list_effect_do_on_ei, label="effect dopamine neuron activity  on food ingestion", legend=:right)
+    Plots.plot!(twinx(),sol.t, energy_intake, label="food ingestion", linestyle=:dash, color=:black, legend=:bottom)
 
 
 elseif variable_name == :blood_glucose
-    list_effect_fi_on_bg = [
-        do_interpolate(effect_fi_on_bg_interp,(point / ref_food_ingestion),xs_fi_bg)
-        for point in food_ingestion
+    list_effect_ei_on_bg = [
+        do_interpolate(effect_ei_on_bg_interp,(point / ref_net_energy_intake),xs_ei_bg)
+        for point in energy_intake
     ]
     list_effect_i_on_bg = [
         do_interpolate(effect_i_on_bg_interp,(point / ref_insulin),xs_i_bg)
         for point in insulin 
     ]
 
-    Plots.plot(sol.t, list_effect_fi_on_bg, label="effect food ingestion on blood glucose", xlabel= "time[days]", ylabel="effect[-]")
+    Plots.plot(sol.t, list_effect_ei_on_bg, label="effect food ingestion on blood glucose", xlabel= "time[days]", ylabel="effect[-]")
     Plots.plot!(sol.t, list_effect_i_on_bg, label="effect insulin on blood glucose")
     Plots.plot!(twinx(),sol.t, blood_glucose, label="blood glucose", linestyle=:dash, color=:black, legend=:bottom)
 
 elseif variable_name == :glp1
-    list_effect_fi_on_glp = [
-        do_interpolate(effect_fi_on_glp_interp, (point / ref_food_ingestion), xs_fi_glp)
-        for point in food_ingestion
+    list_effect_ei_on_glp = [
+        do_interpolate(effect_ei_on_glp_interp, (point / ref_net_energy_intake), xs_ei_glp)
+        for point in energy_intake
     ]
 
-    Plots.plot(sol.t, list_effect_fi_on_glp, label="effect food ingestion on GLP-1", xlabel= "time[days]", ylabel="effect[-]")
+    Plots.plot(sol.t, list_effect_ei_on_glp, label="effect food ingestion on GLP-1", xlabel= "time[days]", ylabel="effect[-]")
     Plots.plot!(twinx(),sol.t, glp1, label="GLP-1", linestyle=:dash, color=:black, legend=:bottom)
 
 elseif variable_name == :insulin
@@ -348,22 +274,5 @@ else
 end
 
 
-y_data_neural2 = y_data_simplified[2] + y_data_simplified[2] *0.001
-
-figure = let f = Figure(size=(20cm,17cm), fontsize=25, backgroundcolor = "#EAEAEA" )
-    axs = Axis[]
-    tr_text = split("ABCDEFGHIJKL", "")
-
-    ax = Axis(f[1,1], xlabel="Time [days]", ylabel=labels[2])
-    lines!(ax, sol_simplified.t, y_data_simplified[2], color = "#D0D3D6", label="Reduced\nmodel", linewidth = 6)
-    lines!(ax, sol_simplified.t, y_data_neural2, color="#498756", label="Extended\nmodel", linestyle= :dash, linewidth = 6) 
-    push!(axs, ax)
-
-    Legend(f[1,2], axs[1])
-
-    #Label(f[begin-1, 0:1],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)
-
-    f
-end
 
 

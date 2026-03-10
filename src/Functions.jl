@@ -1,6 +1,6 @@
 using Interpolations, DifferentialEquations
 
-function run_simulation(inputfile, odefile; callback_type= :none)
+function run_simulation(inputfile, odefile; callback_type= :none, release_times = [], injection_doses =[])
     """ 
     Run an ODE simulation for a given input scenario
     
@@ -66,10 +66,12 @@ function run_simulation(inputfile, odefile; callback_type= :none)
 
     # Run simulation
     prob = ODEProblem(ODEs!, u0, tspan, p)
-    sol = solve(prob, Tsit5(); tstops=injections_time_points, saveat=0.1, callback=cb)
+    sol = solve(prob, Tsit5(), tstops=injections_time_points, saveat=0.1, callback=cb)
 
     return sol
 end
+
+
 
 """
 Callback functions to add semaglutide injections as external input
@@ -354,6 +356,9 @@ function normalized_change(inputfile, odefile; callback_type = "none")
     
     return [body_weight, net_energy_intake, blood_glucose, glp1, insulin, leptin, insulin_sen, leptin_sen, beta, glucotoxicity, lipotoxicity]
 end
+
+
+
 
 function compute_x(x, dodge; width=1, gap=0.2, dodge_gap=0.03)
     """
