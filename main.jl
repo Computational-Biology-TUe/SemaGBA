@@ -35,7 +35,7 @@ function main(simulations)
         # Define input and ODE file
         inputfile_diabetes = "../input/Inputs_diabetes.jl"
         inputfile_obesity = "../input/Inputs_obesity.jl" 
-        odefile = "../src/ODE_simplified.jl" 
+        odefile = "../src/ODE_reduced.jl" 
 
         # Compute normalized changes for diabetic and obesity scenario
         vars_diabetic = normalized_change(inputfile_diabetes, odefile, callback_type = :semaglutide);
@@ -109,7 +109,7 @@ function main(simulations)
         # run simulation 3
         # Define input and ODE file
         inputfile = "input/Inputs_healthy.jl"
-        odefile = "src/ODE_simplified.jl" 
+        odefile = "src/ODE_reduced.jl" 
 
         # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
         sol_untreated = run_simulation(inputfile, odefile, callback_type= :overeating); 
@@ -185,7 +185,7 @@ function main(simulations)
         # Define input and ODE file
         inputfile_diabetes = "input/Inputs_diabetes.jl"
         inputfile_obesity = "input/Inputs_obesity.jl" 
-        odefile = "src/ODE_neural.jl" 
+        odefile = "src/ODE_extended.jl" 
 
         # Run diabetes and obesity simulation
         sol_diabetes = run_simulation(inputfile_diabetes, odefile, callback_type= :semaglutide); 
@@ -239,12 +239,12 @@ function main(simulations)
         # run simulation 5
         # Define input and ODE file
         inputfile = "input/Inputs_diabetes.jl"
-        odefile_simplified = "src/ODE_simplified.jl" 
-        odefile_neural = "src/ODE_neural.jl" 
+        odefile_reduced = "src/ODE_reduced.jl" 
+        odefile_extended = "src/ODE_extended.jl" 
 
         # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
-        sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
-        sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
+        sol_reduced = run_simulation(inputfile, odefile_reduced, callback_type= :semaglutide); 
+        sol_extended = run_simulation(inputfile, odefile_extended, callback_type= :semaglutide); 
 
         extract_values5(sol) = (
             body_weight      = [round(u[1], digits=2) for u in sol.u],
@@ -261,23 +261,23 @@ function main(simulations)
             semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
             beta             = [round(u[13], digits=3) for u in sol.u])
 
-        variables_simplified = extract_values5(sol_simplified)
-        variables_neural = extract_values5(sol_neural)
+        variables_reduced = extract_values5(sol_reduced)
+        variables_extended = extract_values5(sol_extended)
 
         cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
         # Define data, labels, and linestyles for the plot
-        y_data_simplified = [variables_simplified.body_weight, variables_simplified.food_ingestion, 
-                variables_simplified.blood_glucose, variables_simplified.insulin, variables_simplified.insulin_sen, 
-                variables_simplified.glucotoxicity, variables_simplified.leptin, variables_simplified.leptin_sen, 
-                variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_sub, 
-                variables_simplified.beta]
+        y_data_reduced = [variables_reduced.body_weight, variables_reduced.food_ingestion, 
+                variables_reduced.blood_glucose, variables_reduced.insulin, variables_reduced.insulin_sen, 
+                variables_reduced.glucotoxicity, variables_reduced.leptin, variables_reduced.leptin_sen, 
+                variables_reduced.lipotoxicity, variables_reduced.glp1, variables_reduced.semaglu_sub, 
+                variables_reduced.beta]
 
-        y_data_neural = [variables_neural.body_weight, variables_neural.food_ingestion, 
-                variables_neural.blood_glucose, variables_neural.insulin, variables_neural.insulin_sen, 
-                variables_neural.glucotoxicity, variables_neural.leptin, variables_neural.leptin_sen, 
-                variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_sub, 
-                variables_neural.beta]
+        y_data_extended = [variables_extended.body_weight, variables_extended.food_ingestion, 
+                variables_extended.blood_glucose, variables_extended.insulin, variables_extended.insulin_sen, 
+                variables_extended.glucotoxicity, variables_extended.leptin, variables_extended.leptin_sen, 
+                variables_extended.lipotoxicity, variables_extended.glp1, variables_extended.semaglu_sub, 
+                variables_extended.beta]
 
         labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
                     "Blood glucose\n[mg/dL]", "Insulin\n[mg/dL]", "Insulin sensitivity\n[-]", 
@@ -289,13 +289,13 @@ function main(simulations)
         figure = let f = Figure(size=(15cm,17cm), fontsize=12)
             axs = Axis[]
             tr_text = split("ABCDEFGHIJKL", "")
-                for i in eachindex(y_data_simplified)
+                for i in eachindex(y_data_reduced)
 
                     x = (i-1) ÷ 3 
                     y = (i-1) % 3
                     ax = Axis(f[x,y], xlabel="Time [days]", ylabel=labels[i])
-                    lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Original")
-                    lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="With neural\n activity", linestyle= :dash)
+                    lines!(ax, sol_reduced.t, y_data_reduced[i], color=Makie.wong_colors()[2], label="Original")
+                    lines!(ax, sol_extended.t, y_data_extended[i], color=Makie.wong_colors()[1], label="With extended\n activity", linestyle= :dash)
                     push!(axs, ax)
                     Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
                 end
@@ -317,12 +317,12 @@ function main(simulations)
         # Define input and ODE file
 
         inputfile = joinpath(@__DIR__, "input", "Inputs_obesity.jl")
-        odefile_simplified = joinpath(@__DIR__, "src", "ODE_simplified.jl")
-        odefile_neural = joinpath(@__DIR__, "src", "ODE_neural.jl")
+        odefile_reduced = joinpath(@__DIR__, "src", "ODE_reduced.jl")
+        odefile_extended = joinpath(@__DIR__, "src", "ODE_extended.jl")
 
         # Run overeating simulation with (sol_treated) and without (sol_untreated) treatment
-        sol_simplified = run_simulation(inputfile, odefile_simplified, callback_type= :semaglutide); 
-        sol_neural = run_simulation(inputfile, odefile_neural, callback_type= :semaglutide); 
+        sol_reduced = run_simulation(inputfile, odefile_reduced, callback_type= :semaglutide); 
+        sol_extended = run_simulation(inputfile, odefile_extended, callback_type= :semaglutide); 
 
         extract_values6(sol) = (
             body_weight      = [round(u[1], digits=2) for u in sol.u],
@@ -339,23 +339,23 @@ function main(simulations)
             semaglu_plasma   = [round(u[12], digits=9) for u in sol.u],
             beta             = [round(u[13], digits=3) for u in sol.u])
 
-        variables_simplified = extract_values6(sol_simplified)
-        variables_neural = extract_values6(sol_neural)
+        variables_reduced = extract_values6(sol_reduced)
+        variables_extended = extract_values6(sol_extended)
 
         cm = 96 / 2.54;      # convert cm to pixels (for figure sizing)
 
         # Define data, labels, and linestyles for the plot
-        y_data_simplified = [variables_simplified.body_weight, variables_simplified.food_ingestion, 
-                variables_simplified.blood_glucose, variables_simplified.insulin, variables_simplified.insulin_sen, 
-                variables_simplified.glucotoxicity, variables_simplified.leptin, variables_simplified.leptin_sen, 
-                variables_simplified.lipotoxicity, variables_simplified.glp1, variables_simplified.semaglu_sub, 
-                variables_simplified.beta]
+        y_data_reduced = [variables_reduced.body_weight, variables_reduced.food_ingestion, 
+                variables_reduced.blood_glucose, variables_reduced.insulin, variables_reduced.insulin_sen, 
+                variables_reduced.glucotoxicity, variables_reduced.leptin, variables_reduced.leptin_sen, 
+                variables_reduced.lipotoxicity, variables_reduced.glp1, variables_reduced.semaglu_sub, 
+                variables_reduced.beta]
 
-        y_data_neural = [variables_neural.body_weight, variables_neural.food_ingestion, 
-                variables_neural.blood_glucose, variables_neural.insulin, variables_neural.insulin_sen, 
-                variables_neural.glucotoxicity, variables_neural.leptin, variables_neural.leptin_sen, 
-                variables_neural.lipotoxicity, variables_neural.glp1, variables_neural.semaglu_sub, 
-                variables_neural.beta]
+        y_data_extended = [variables_extended.body_weight, variables_extended.food_ingestion, 
+                variables_extended.blood_glucose, variables_extended.insulin, variables_extended.insulin_sen, 
+                variables_extended.glucotoxicity, variables_extended.leptin, variables_extended.leptin_sen, 
+                variables_extended.lipotoxicity, variables_extended.glp1, variables_extended.semaglu_sub, 
+                variables_extended.beta]
 
         labels = ["Body weight\n[kg]", "Food ingestion\n[kcal]", 
                     "Blood glucose\n[mg/dL]", "Insulin\n[mg/dL]", "Insulin sensitivity\n[-]", 
@@ -367,13 +367,13 @@ function main(simulations)
         figure = let f = Figure(size=(15cm,17cm), fontsize=12)
             axs = Axis[]
             tr_text = split("ABCDEFGHIJKL", "")
-                for i in eachindex(y_data_simplified)
+                for i in eachindex(y_data_reduced)
 
                     x = (i-1) ÷ 3 
                     y = (i-1) % 3
                     ax = Axis(f[x,y], xlabel="Time [days]", ylabel=labels[i])
-                    lines!(ax, sol_simplified.t, y_data_simplified[i], color=Makie.wong_colors()[2], label="Original")
-                    lines!(ax, sol_neural.t, y_data_neural[i], color=Makie.wong_colors()[1], label="With neural\n activity", linestyle= :dash)
+                    lines!(ax, sol_reduced.t, y_data_reduced[i], color=Makie.wong_colors()[2], label="Original")
+                    lines!(ax, sol_extended.t, y_data_extended[i], color=Makie.wong_colors()[1], label="With extended\n activity", linestyle= :dash)
                     push!(axs, ax)
                     Label(f[x,y, TopLeft()], tr_text[i],padding = (0, 15, 15, 0), font=:bold, fontsize=16)
                 end
