@@ -112,6 +112,7 @@ sols = [sol_diabetes, sol_obesity]
 effects_all = [effects_diabetes, effects_obesity]
 neurons_all = [neurons_diabetes, neurons_obesity]
 title = ["Diabetes", "Obesity"]
+cm = 96 / 2.54
     
 # Create figure 
 figure = let f = Figure(fontsize=10, size=(15cm,17cm))

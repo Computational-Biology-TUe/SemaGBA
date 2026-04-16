@@ -96,7 +96,7 @@ function main(simulations)
             Label(fig[2,1:2], "*Normalized with reference value", fontsize = 12, halign=:right)
             
             # save figure
-            figdir = joinpath(@__DIR__, "..", "figures")
+            figdir = joinpath(@__DIR__, "figures")
             mkpath(figdir)
             save(joinpath(figdir, "fig2_Barplot.png"), f)
 
@@ -172,7 +172,7 @@ function main(simulations)
             Legend(f[4,0:2], axs[1], orientation=:horizontal)
             
             # save figure
-            figdir = joinpath(@__DIR__, "..", "figures")
+            figdir = joinpath(@__DIR__, "figures")
             mkpath(figdir)
             save(joinpath(figdir, "fig3_Overeating.png"), f)   
             f
@@ -228,7 +228,7 @@ function main(simulations)
             Legend(f[1, 2], ax1, orientation=:vertical)
             
             # save figure
-            figdir = joinpath(@__DIR__, "..", "figures")
+            figdir = joinpath(@__DIR__, "figures")
             mkpath(figdir)
             save(joinpath(figdir, "fig4b_Neuron_activity.png"), f)
     
@@ -305,7 +305,7 @@ function main(simulations)
                 Label(f[begin-1, 0:2],"Diabetes treatement with 0.5mg semaglutide", fontsize=20, font = :bold)
                 
                 # save figure
-                figdir = joinpath(@__DIR__, "..", "figures")
+                figdir = joinpath(@__DIR__, "figures")
                 mkpath(figdir)
                 save(joinpath(figdir, "fig5_Trajectories_diabetic.png"), f)
 
@@ -382,9 +382,9 @@ function main(simulations)
                 Label(f[begin-1, 0:2],"Obesity treatement with 2.4mg semaglutide", fontsize=20, font = :bold)
                 
                 # save figure
-                figdir = joinpath(@__DIR__, "..", "figures")
+                figdir = joinpath(@__DIR__, "figures")
                 mkpath(figdir)
-                save(joinpath(figdir, "fig66_Trajectories_obesity.png"), f)
+                save(joinpath(figdir, "fig6_Trajectories_obesity.png"), f)
 
                 f
         end
@@ -421,12 +421,11 @@ function main(simulations)
             Label(f[begin-1, 0:2],"Effect functions for POMC neuron activity", fontsize=15, font = :bold)
             
             # save figure
-            figdir = joinpath(@__DIR__, "..", "figures")
+            figdir = joinpath(@__DIR__, "figures")
             mkpath(figdir)
             save(joinpath(figdir, "fig7_Effect_functions_POMC.png"), f)
 
             f
-
         end
     end
 
@@ -545,6 +544,7 @@ function main(simulations)
         effects_all = [effects_diabetes, effects_obesity]
         neurons_all = [neurons_diabetes, neurons_obesity]
         title = ["Diabetes", "Obesity"]
+        cm = 96 / 2.54
             
         # Create figure 
         figure = let f = Figure(fontsize=10, size=(15cm,17cm))
@@ -587,7 +587,7 @@ function main(simulations)
                 Label(f[0, 1:2], "Contributions to changes in neuronal activity over time", fontsize = 18, font = :bold)
             
                 # Save figure
-                figdir = joinpath(@__DIR__, "..", "figures")
+                figdir = joinpath(@__DIR__, "figures")
                 mkpath(figdir)
                 save(joinpath(figdir, "fig8_contribution_neuron.png"), f)
                 f
@@ -596,5 +596,5 @@ function main(simulations)
 end
 
 
-main(["6"])
+main(["8"])
 

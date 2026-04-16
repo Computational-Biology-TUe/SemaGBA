@@ -1,6 +1,6 @@
 using Interpolations, DifferentialEquations
 
-function run_simulation(inputfile, odefile; callback_type= :none, release_times = [], injection_doses =[])
+function run_simulation(inputfile, odefile; callback_type= :none)
     """ 
     Run an ODE simulation for a given input scenario
     

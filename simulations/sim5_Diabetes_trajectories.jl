@@ -76,10 +76,5 @@ figure = let f = Figure(size=(15cm,17cm), fontsize=12)
         f
 end
 
-# Calculate percent difference in net energy intake between reduced and extended model
-percent_diff = (variables_reduced.net_energy_intake .- variables_extended.net_energy_intake) ./
-                       variables_reduced.net_energy_intake .*100
-
-maximum(abs.(percent_diff))
 
 

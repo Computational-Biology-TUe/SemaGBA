@@ -1,7 +1,7 @@
 """ This file contains all inputs to simulate a healthy individual"""
 
 # Define the duration of the simulation
-t_days =365 #*5; #days
+t_days =365*5; #days
 
 # Define the pharmacokinetic parameters for the semaglutide injections
 bioavailability = 0.89; #dimentionless

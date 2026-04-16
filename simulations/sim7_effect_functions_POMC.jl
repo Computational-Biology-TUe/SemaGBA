@@ -1,4 +1,4 @@
-using Interpolations, Plots, CairoMakie
+using Interpolations, CairoMakie
 
 # Include data and function files
 include("../src/Data.jl");

@@ -1,6 +1,8 @@
 include("Data.jl")
 include("Functions.jl") 
 
+using Interpolations
+
 # Define interpolation functions for all effects
 effect_ei_on_bw_interp = interpolate_function(xs_ei_bw, ys_ei_bw)
 effect_glp_on_ei_interp = interpolate_function(xs_glp_ei, ys_glp_ei)
